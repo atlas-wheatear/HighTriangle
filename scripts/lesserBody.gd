@@ -4,11 +4,14 @@ signal picked
 
 const defaultLesserColor = Color(0.9, 0.9, 0.9, 1.0)
 var lesserMeshMaterial
-var index
+var netIndex
 var shape
 
 func _ready():
 	add_to_group("lesserBodies")
+
+func getNetIndex():
+	return netIndex
 
 func resetColor():
 	lesserMeshMaterial.albedo_color = defaultLesserColor
@@ -17,9 +20,9 @@ func setColor(color):
 	lesserMeshMaterial.albedo_color = color
 
 func setup(argIndex, normal, vertices):
-	index = argIndex
+	netIndex = argIndex
 	
-	self.set_name("lesserBody" + str(argIndex))
+	self.set_name("lesserBody" + str(netIndex))
 	
 	lesserMeshMaterial = SpatialMaterial.new()
 	lesserMeshMaterial.albedo_color = defaultLesserColor
