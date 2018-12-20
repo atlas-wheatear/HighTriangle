@@ -28,4 +28,9 @@ lod_max_hysteresis = 0.0
 mesh = null
 skeleton = NodePath("..")
 
+[node name="lesserCollisionShape" type="CollisionShape" parent="." index="1"]
+
+shape = null
+disabled = false
+
 

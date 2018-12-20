@@ -301,7 +301,7 @@ func drawBoard():
 	
 	for i in range(4*nl):
 		var lesserInstance = lesserScene.instance()
-		lesserInstance.set_name("lesserScene" + str(i))
+		lesserInstance.set_name("lesserInstance" + str(i))
 		add_child(lesserInstance)
 		var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[i]
 		var normal = normals[getGreat(i)]
@@ -313,7 +313,7 @@ func drawBoard():
 		lesserBody.setup(i, normal, lesserVertices)
 
 func _ready():
-	ratio = 8
+	ratio = 6
 	createBoard()
 
 func setColor(netIndex, newColor):

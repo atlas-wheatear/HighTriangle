@@ -31,6 +31,8 @@ func updateCartesian():
 
 func _ready():
 	camera = $Camera
+	add_to_group("Cameras")
+	
 	
 func _process(delta):
 	process_input()

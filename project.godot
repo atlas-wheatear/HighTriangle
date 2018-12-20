@@ -14,6 +14,12 @@ config/name="ClosureChess"
 run/main_scene="res://scenes/Board.tscn"
 config/icon="res://icon.png"
 
+[layer_names]
+
+3d_render/layer_1="Cameras"
+3d_render/layer_2="Pieces"
+3d_render/layer_3="Lessers"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
