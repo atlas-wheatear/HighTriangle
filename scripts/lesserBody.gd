@@ -18,12 +18,12 @@ func setColor(color):
 
 func setup(argIndex, normal, vertices):
 	index = argIndex
-	self.set_name("lesserBody")
-	$lesserMesh.set_name("lesserMesh")
+	self.set_name("lesserBody" + str(i))
+	$lesserMesh.set_name("lesserMesh" + str(i))
 	
 	lesserMeshMaterial = SpatialMaterial.new()
 	lesserMeshMaterial.albedo_color = defaultLesserColor
-	lesserMeshMaterial.set_name("lesserMeshMaterial")
+	lesserMeshMaterial.set_name("lesserMeshMaterial" + str(i))
 	
 	var surfaceTool = SurfaceTool.new()
 	surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
