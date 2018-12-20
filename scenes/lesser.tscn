@@ -1,11 +1,6 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://scripts/lesserBody.gd" type="Script" id=1]
-[ext_resource path="res://scripts/lesserCollisionShape.gd" type="Script" id=2]
-
-[sub_resource type="ConvexPolygonShape" id=1]
-
-points = PoolVector3Array(  )
 
 [node name="lesserBody" type="StaticBody" index="0"]
 
@@ -32,11 +27,5 @@ lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
 mesh = null
 skeleton = NodePath("..")
-
-[node name="lesserCollisionShape" type="CollisionShape" parent="." index="1"]
-
-shape = SubResource( 1 )
-disabled = false
-script = ExtResource( 2 )
 
 

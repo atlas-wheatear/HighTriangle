@@ -18,12 +18,11 @@ func setColor(color):
 
 func setup(argIndex, normal, vertices):
 	index = argIndex
-	self.set_name("lesserBody" + str(i))
-	$lesserMesh.set_name("lesserMesh" + str(i))
+	self.set_name("lesserBody" + str(argIndex))
 	
 	lesserMeshMaterial = SpatialMaterial.new()
 	lesserMeshMaterial.albedo_color = defaultLesserColor
-	lesserMeshMaterial.set_name("lesserMeshMaterial" + str(i))
+	lesserMeshMaterial.set_name("lesserMeshMaterial" + str(argIndex))
 	
 	var surfaceTool = SurfaceTool.new()
 	surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -36,4 +35,4 @@ func setup(argIndex, normal, vertices):
 	$lesserMesh.mesh = mesh
 	$lesserMesh.set_surface_material(0, lesserMeshMaterial)
 	
-	$lesserCollisionShape.shape = mesh.create_trimesh_shape()
+	#$lesserCollisionShape.shape = mesh.create_trimesh_shape()

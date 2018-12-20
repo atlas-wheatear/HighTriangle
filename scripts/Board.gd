@@ -296,45 +296,28 @@ func drawBoard():
 	
 	var edgeMesh = surfaceToolEdge.commit()
 	self.mesh = edgeMesh
-		
+	
+	var lesserScene = load("res://scenes/lesser.tscn")
+	
 	for i in range(4*nl):
-		var lesserBody = StaticBody.new()
-		lesserBody.set_name("lesserBody"+str(i))
-		self.add_child(lesserBody)
-		var lesserMesh = MeshInstance.new()
-		lesserMesh.set_name("lesserMesh"+str(i))
-		lesserBody.add_child(lesserMesh)
-		
-		var lesserMeshMaterial = SpatialMaterial.new()
-		lesserMeshMaterial.albedo_color = defaultLesserColor
-		lesserMeshMaterial.set_name("lesserMeshMaterial" + str(i))
-		lesserMeshesMaterials.append(lesserMeshMaterial)
-		
-		var surfaceTool = SurfaceTool.new()
-		surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
-		
+		var lesserInstance = lesserScene.instance()
+		lesserInstance.set_name("lesserScene" + str(i))
+		add_child(lesserInstance)
+		var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[i]
 		var normal = normals[getGreat(i)]
-		
-		# make more efficent by considering the only four normals corresponding to the 4 greats
+		var lesserVertices = []
 		
 		for j in range(3):
-			var vertex = vertices[lessers[i][2-j]]
-			surfaceTool.add_normal(normal)
-			surfaceTool.add_vertex(vertex)
+			lesserVertices.append(vertices[lessers[i][2-j]])
 		
-		var mesh = surfaceTool.commit()
-		lesserMesh.mesh = mesh
-		lesserMesh.set_surface_material(0, lesserMeshMaterial)
-		
-		lesserMeshes.append(lesserMesh)
-		lesserBodies.append(lesserBody)
+		lesserBody.setup(i, normal, lesserVertices)
 
 func _ready():
 	ratio = 8
 	createBoard()
 
 func setColor(netIndex, newColor):
-	lesserMeshesMaterials[netIndex].albedo_color = newColor
+	pass
 
 func createBoard():
 	normals.append(Vector3(0,1,0))
