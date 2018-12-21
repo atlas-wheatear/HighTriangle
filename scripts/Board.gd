@@ -281,11 +281,6 @@ func getGreat(netIndex):
 	return 3
 
 func drawBoard():
-
-	# list of lessermeshes and lessers' materials
-	lesserMeshes = []
-	lesserMeshesMaterials = []
-
 	var surfaceToolEdge = SurfaceTool.new()
 	surfaceToolEdge.begin(Mesh.PRIMITIVE_LINES)
 	surfaceToolEdge.add_color(lineColor)

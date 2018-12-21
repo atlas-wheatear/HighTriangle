@@ -333,7 +333,7 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 			var netIndex = baseNetIndex
                 
 			# append netIndex
-			rookColumns[column].append(netIndex)
+			rookColumns[column].append(int(netIndex))
                 
 			# iterate up remainder of column
 			for j in range(rows-1):
@@ -341,7 +341,7 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 				netIndex = move(netIndex, netIndexMotion)
                     
 				# append netIndex
-				rookColumns[column].append(netIndex)
+				rookColumns[column].append(int(netIndex))
                 
 			# break if final iteration
 			if i == ratio-1:
@@ -376,7 +376,7 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 			var netIndex = baseNetIndex
                 
 			# append first netIndex
-			rookColumns[column].append(netIndex)
+			rookColumns[column].append(int(netIndex))
                 
 			# iterate up remainder of column
 			for j in range(rows-1):
@@ -384,7 +384,7 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 				netIndex = move(netIndex, netIndexMotion)
                     
 				# append next netIndex
-				rookColumns[column].append(netIndex)
+				rookColumns[column].append(int(netIndex))
             
 		# account for iterations in count
 		count += self.ratio-1
@@ -482,8 +482,9 @@ func  populateRookNotation():
         
 	# secondary fragment
 	returnArray = addStraightRookColumns(returnArray[0], returnArray[1], returnArray[2], false, "left", "betaDownLeft")
-        
+		
 	rookColumns = returnArray[0]
+
 
 func getOccupiedRookLines(netIndex):
 	# set empty occupiedRookLines
@@ -562,6 +563,7 @@ func scanForRookMoves(armyIndex, line, moves):
 
 # list of moves, each move has it's netIndex and a bool that is True if it represents a capture, and False if it does not
 func getRookMoves(armyIndex, netIndex):
+	# is returning current position as valid move, WRONG!
 	# get list of rows+columns in which rook is
 	var occupiedRookLines = getOccupiedRookLines(netIndex)
 	
@@ -575,14 +577,14 @@ func getRookMoves(armyIndex, netIndex):
 		
 		# get index of netIndex
 		var index = line.find(netIndex)
-            
+		
 		# if pre-netIndex indexes
 		if index != 0:
 			# slice copied line before index and reverse
 			var formattedLine = slice(line, 0, index)
 			formattedLine.invert()
 			
-			# if post-netIndex indexes and is row, consider circumnavigation
+			# if post-netIndex indexes exist and is row, consider circumnavigation
 			if index != len(line)-1 and pair[1]:
 				# slice copied line after index and reverse
 				var addLine = slice(line, index+1, len(line))
@@ -599,7 +601,7 @@ func getRookMoves(armyIndex, netIndex):
 			# slice copied line after index
 			var formattedLine = slice(line, index+1, len(line))
 
-			# if pre-netIndex indexes and is row, consider circumnavigation
+			# if pre-netIndex indexes exist and is row, consider circumnavigation
 			if index != 0 and pair[1]:
 				# slice copied line before index
 				var addLine = slice(line, 0, index)
@@ -618,7 +620,7 @@ func _ready():
 	camera = $OrbitCamera/Camera
 	board = $Board
 	
-	ratio = 6
+	ratio = 4
 	s = 2.0
 	
 	board.setup(ratio, s)
