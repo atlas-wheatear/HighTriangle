@@ -31,6 +31,7 @@ func setup(argIndex, normal, vertices):
 	surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
 	for j in range(3):
+		# needed to avoid complaints
 		surfaceTool.add_index(j)
 		surfaceTool.add_normal(normal)
 		surfaceTool.add_vertex(vertices[j])

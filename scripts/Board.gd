@@ -6,10 +6,12 @@ const r2 = sqrt(2)
 var lineColor = Color(0.1, 0.1, 0.1)
 var defaultLesserColor = Color(0.9, 0.9, 0.9, 1.0)
 
-var s = 2.0
 var vertices = []
 var edges = []
 var lessers = []
+
+var ratio
+var s
 
 # list of lessermeshes, materials and collision shapes
 var lesserBodies = []
@@ -25,7 +27,6 @@ var lesserToNet = []
 var nv
 var ne
 var nl
-var ratio
 
 var ABC = Vector3(-0.5, 1.0/(2.0*r2*r3), r3/6.0)
 var ACD = Vector3(0.5, 1.0/(2.0*r2*r3), r3/6.0)
@@ -313,7 +314,11 @@ func drawBoard():
 		lesserBody.setup(i, normal, lesserVertices)
 
 func _ready():
-	ratio = 6
+	pass
+
+func setup(argRatio, argS):
+	ratio = argRatio
+	s = argS
 	createBoard()
 
 func setColor(netIndex, newColor):
