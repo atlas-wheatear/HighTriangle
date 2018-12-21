@@ -2,7 +2,7 @@ extends StaticBody
 
 signal picked
 
-const defaultLesserColor = Color(0.9, 0.9, 0.9, 1.0)
+const defaultLesserColor = Color(0.8, 0.8, 0.8, 1.0)
 var lesserMeshMaterial
 var netIndex
 var shape

@@ -322,7 +322,14 @@ func setup(argRatio, argS):
 	createBoard()
 
 func setColor(netIndex, newColor):
-	pass
+	var lesser = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
+	lesser.setColor(newColor)
+
+func resetColors():
+	var lessers = get_tree().get_nodes_in_group("lesserBodies")
+	
+	for lesser in lessers:
+		lesser.resetColor()
 
 func createBoard():
 	normals.append(Vector3(0,1,0))
