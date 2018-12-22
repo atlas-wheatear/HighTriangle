@@ -23,12 +23,19 @@ func updateCartesian():
 	pos.x = r * sin(theta) * sin(phi)
 	pos.y = r * cos(theta)
 
+func loopAround(angle):
+	while angle < 0:
+		angle += 2*PI
+	while angle > 2*PI:
+		angle -= 2*PI
+	return angle
+
 func _ready():
 	camera = $Camera
-	add_to_group("Cameras")
 
 func rotateImpulse(phiImpulse, thetaImpulse):
 	phi += phiImpulse * phiSen
+	phi = loopAround(phi)
 	theta += thetaImpulse * thetaSen
 	theta = clamp(theta, PI/4, PI*3/4)
 	

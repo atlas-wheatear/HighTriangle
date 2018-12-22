@@ -689,6 +689,98 @@ func populateEdgeMoves():
 			else:
 				edgeMoves[i].append(moveUp(i))
 
+func populateVertexMoves():
+	vertexMoves = []
+	for i in range(4*nl):
+		vertexMoves.append([])
+	
+	# iterate through lessers
+	for i in range(4*nl):
+		# if up
+		if isUp(i):
+			# moving up
+			# if not illegal position
+			if i != 2*ratio-1:
+				# if top most
+				if getNetRow(i) == 0:
+					var column = getNetColumn(i)
+					var nextColumn = 4*ratio-column-2
+					vertexMoves[i].append(nextColumn)
+				# not top most
+				else:
+					vertexMoves[i].append(moveUp(i))
+			
+			# moving beta down right
+			# if not illegal position
+			if i != rightmosts[ratio-1]-1:
+				# if one less than rightmost
+				if rightmosts.has(i+1):
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-row-1
+					vertexMoves[i].append(rightmosts[nextRow]-1)
+				# not one less than rightmost
+				else:
+					vertexMoves[i].append(moveBetaDownRight(i))
+			
+			# moving beta down left
+			# if not illegal position
+			if i != leftmosts[ratio-1]+1:
+				# if one more than leftmost
+				if leftmosts.has(i-1):
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-row-1
+					vertexMoves[i].append(leftmosts[nextRow]+1)
+				# not one more than leftmost
+				else:
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-row-1
+					vertexMoves[i].append(moveBetaDownLeft(i))
+		# is down
+		else:
+			# moving down
+			# if not illegal position
+			if i != nl-1:
+				# if in leftmosts
+				if leftmosts.has(i):
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-row-2
+					vertexMoves[i].append(leftmosts[nextRow])
+				# else if in rightmosts
+				elif rightmosts.has(i):
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-row-2
+					vertexMoves[i].append(rightmosts[nextRow])
+				else:
+					vertexMoves[i].append(moveDown(i))
+			
+			# moving beta up right
+			# if not illegal position
+			if i != 4*ratio-2:
+				# if in rightmosts
+				if rightmosts.has(i):
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-row
+					vertexMoves[i].append(rightmosts[nextRow])
+				# else if top row
+				elif getNetRow(i) == 0:
+					vertexMoves[i].append(4*ratio-4-i)
+				else:
+					vertexMoves[i].append(moveBetaUpRight(i))
+			
+			# moving beta up left
+			# if not illegal position
+			if i != 0:
+				# if i in leftmosts
+				if leftmosts.has(i):
+					var row = getNetRow(i)
+					var nextRow = 2*ratio-2-row
+					vertexMoves[i].append(leftmosts[nextRow])
+				# else if top row
+				elif getNetRow(i) == 0:
+					vertexMoves[i].append(4*ratio+2-i)
+				else:
+					vertexMoves[i].append(moveBetaUpLeft(i))
+
 func _ready():
 	cameraBody = $OrbitCamera
 	camera = $OrbitCamera/Camera
@@ -707,6 +799,7 @@ func _ready():
 	populateRightmosts()
 	populateRookNotation()
 	populateEdgeMoves()
+	populateVertexMoves()
 
 func _process(delta):
 	process_input(delta)
@@ -722,15 +815,19 @@ func process_input(delta):
 			var netIndex = lesser.getNetIndex()
 			board.resetColors()
 			var armyIndex = 0
-			var moves = edgeMoves[netIndex]
+			var edgeMovesCopy = edgeMoves[netIndex]
+			var vertexMovesCopy = vertexMoves[netIndex]
 			var white = Color(1.0, 1.0, 1.0, 1.0)
 			var yellow = Color(1.0, 1.0, 0.0, 1.0)
 			var red = Color(1.0, 0.0, 0.0, 1.0)
-			for move in moves:
-				# if capture:
-				board.setColor(move, yellow)
-			# remove netIndex from moves!!!
+			var green = Color(0.0, 1.0, 0.0, 1.0)
+			
 			board.setColor(netIndex, red)
+			for move in edgeMovesCopy:
+				board.setColor(move, yellow)
+			
+			for move in vertexMovesCopy:
+				board.setColor(move, green)
 	
 	if Input.is_action_pressed("ui_left"):
 		turnLeft = 1
