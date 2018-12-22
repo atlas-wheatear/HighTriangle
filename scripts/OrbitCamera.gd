@@ -1,8 +1,8 @@
 extends Spatial
 
 # radians per second
-const thetaSen = 0.2
-const phiSen = 0.5
+const thetaSen = 0.6
+const phiSen = 1.0
 
 var camera
 
