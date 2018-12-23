@@ -343,4 +343,3 @@ func createBoard():
 	populateLesserToNet()
 	populateLessers()
 	drawBoard()
-	setColor(1, Color(1.0, 0.0, 0.0, 1.0))

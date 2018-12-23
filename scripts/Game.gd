@@ -689,6 +689,7 @@ func populateEdgeMoves():
 			else:
 				edgeMoves[i].append(moveUp(i))
 
+# SERIOUSLY BUGGY
 func populateVertexMoves():
 	vertexMoves = []
 	for i in range(4*nl):
@@ -703,9 +704,7 @@ func populateVertexMoves():
 			if i != 2*ratio-1:
 				# if top most
 				if getNetRow(i) == 0:
-					var column = getNetColumn(i)
-					var nextColumn = 4*ratio-column-2
-					vertexMoves[i].append(nextColumn)
+					vertexMoves[i].append(4*ratio-2-i)
 				# not top most
 				else:
 					vertexMoves[i].append(moveUp(i))
@@ -716,7 +715,7 @@ func populateVertexMoves():
 				# if one less than rightmost
 				if rightmosts.has(i+1):
 					var row = getNetRow(i)
-					var nextRow = 2*ratio-row-1
+					var nextRow = 2*ratio-row-2
 					vertexMoves[i].append(rightmosts[nextRow]-1)
 				# not one less than rightmost
 				else:
@@ -728,19 +727,18 @@ func populateVertexMoves():
 				# if one more than leftmost
 				if leftmosts.has(i-1):
 					var row = getNetRow(i)
-					var nextRow = 2*ratio-row-1
+					var nextRow = 2*ratio-row-2
 					vertexMoves[i].append(leftmosts[nextRow]+1)
 				# not one more than leftmost
 				else:
-					var row = getNetRow(i)
-					var nextRow = 2*ratio-row-1
 					vertexMoves[i].append(moveBetaDownLeft(i))
 		# is down
 		else:
 			# moving down
 			# if not illegal position
-			if i != nl-1:
+			if i != 4*nl-1 and i != leftmosts[ratio-1] and i != rightmosts[ratio-1]:
 				# if in leftmosts
+				
 				if leftmosts.has(i):
 					var row = getNetRow(i)
 					var nextRow = 2*ratio-row-2
@@ -755,7 +753,7 @@ func populateVertexMoves():
 			
 			# moving beta up right
 			# if not illegal position
-			if i != 4*ratio-2:
+			if i != 4*ratio-2 and i != 2*ratio-2 and i != rightmosts[ratio]:
 				# if in rightmosts
 				if rightmosts.has(i):
 					var row = getNetRow(i)
@@ -769,15 +767,15 @@ func populateVertexMoves():
 			
 			# moving beta up left
 			# if not illegal position
-			if i != 0:
+			if i != 0 and i != 2*ratio and i != leftmosts[ratio]:
 				# if i in leftmosts
 				if leftmosts.has(i):
 					var row = getNetRow(i)
-					var nextRow = 2*ratio-2-row
+					var nextRow = 2*ratio-row
 					vertexMoves[i].append(leftmosts[nextRow])
 				# else if top row
 				elif getNetRow(i) == 0:
-					vertexMoves[i].append(4*ratio+2-i)
+					vertexMoves[i].append(4*ratio-i)
 				else:
 					vertexMoves[i].append(moveBetaUpLeft(i))
 
@@ -815,6 +813,7 @@ func process_input(delta):
 			var netIndex = lesser.getNetIndex()
 			board.resetColors()
 			var armyIndex = 0
+			print(netIndex)
 			var edgeMovesCopy = edgeMoves[netIndex]
 			var vertexMovesCopy = vertexMoves[netIndex]
 			var white = Color(1.0, 1.0, 1.0, 1.0)
@@ -822,10 +821,8 @@ func process_input(delta):
 			var red = Color(1.0, 0.0, 0.0, 1.0)
 			var green = Color(0.0, 1.0, 0.0, 1.0)
 			
-			board.setColor(netIndex, red)
 			for move in edgeMovesCopy:
 				board.setColor(move, yellow)
-			
 			for move in vertexMovesCopy:
 				board.setColor(move, green)
 	
