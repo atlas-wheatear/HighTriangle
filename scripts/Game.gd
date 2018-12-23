@@ -52,19 +52,6 @@ func getNetRow(netIndex):
 			# return row number
 			return i
 
-func getNetColumn(netIndex):
-	# get netRow
-	var row = getNetRow(netIndex)
-	
-	# get leftmost of row
-	var leftmost = leftmosts[row]
-	
-	# get distance from leftmost
-	var d = netIndex - leftmost
-	
-	# return the column
-	return row+d
-
 # returns True if triangle is up /\, False if it is down \/
 func isUp(netIndex):
 	# get row of netIndex
@@ -682,9 +669,7 @@ func populateEdgeMoves():
 			# up motion
 			# if netIndex in top row
 			if getNetRow(i) == 0:
-				var column = getNetColumn(i)
-				var nextColumn = 4*ratio - 2 - column
-				edgeMoves[i].append(nextColumn)
+				edgeMoves[i].append(4*ratio - 2 - i)
 			# not in top row
 			else:
 				edgeMoves[i].append(moveUp(i))
