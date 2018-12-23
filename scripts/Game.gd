@@ -779,6 +779,53 @@ func populateVertexMoves():
 				else:
 					vertexMoves[i].append(moveBetaUpLeft(i))
 
+func getPawnMoves(armyIndex, netIndex):
+	var moves = []
+	
+	for move in edgeMoves[netIndex]:
+		if emptyNetIndex(move):
+			moves.append([move, false])
+	
+	for move in vertexMoves[netIndex]:
+		if hostilePieceInNetIndex(armyIndex, netIndex):
+			moves.append([move, true])
+	
+	return moves
+
+# knight remains on starting orientation, i.e. up => up, down => down always
+func getKnightMoves(armyIndex, netIndex):
+	var moves = []
+	
+	var firstSteps = vertexMoves[netIndex]
+	
+	for firstStep in firstSteps:
+		var secondSteps = edgeMoves[firstStep]
+		
+		for secondStep in secondSteps:
+			if emptyNetIndex(secondStep):
+				moves.append([secondStep, false])
+			elif hostilePieceInNetIndex(armyIndex, secondStep):
+				moves.append([secondStep, true])
+	
+	return moves
+
+func getCrownMoves(armyIndex, netIndex):
+	var moves = []
+	
+	for move in edgeMoves[netIndex]:
+		if emptyNetIndex(move):
+			moves.append([move, false])
+		elif hostilePieceInNetIndex(armyIndex, move):
+			moves.append([move, true])
+	
+	for move in vertexMoves[netIndex]:
+		if emptyNetIndex(move):
+			moves.append([move, false])
+		elif hostilePieceInNetIndex(armyIndex, move):
+			moves.append([move, true])
+	
+	return moves
+
 func _ready():
 	cameraBody = $OrbitCamera
 	camera = $OrbitCamera/Camera
@@ -813,18 +860,18 @@ func process_input(delta):
 			var netIndex = lesser.getNetIndex()
 			board.resetColors()
 			var armyIndex = 0
-			print(netIndex)
-			var edgeMovesCopy = edgeMoves[netIndex]
-			var vertexMovesCopy = vertexMoves[netIndex]
+			var moves = getKnightMoves(armyIndex, netIndex)
 			var white = Color(1.0, 1.0, 1.0, 1.0)
 			var yellow = Color(1.0, 1.0, 0.0, 1.0)
 			var red = Color(1.0, 0.0, 0.0, 1.0)
 			var green = Color(0.0, 1.0, 0.0, 1.0)
 			
-			for move in edgeMovesCopy:
-				board.setColor(move, yellow)
-			for move in vertexMovesCopy:
-				board.setColor(move, green)
+			for move in moves:
+				if move[1]:
+					board.setColor(move[0], yellow)
+				else:
+					board.setColor(move[0], green)
+			board.setColor(netIndex, red)
 	
 	if Input.is_action_pressed("ui_left"):
 		turnLeft = 1
