@@ -334,7 +334,7 @@ func createBoard():
 	normals.append(nC.normalized())
 	var nD = ADBb.cross(ACDb)
 	normals.append(nD.normalized())
-	nl = pow(ratio, 2)
+	nl = int(pow(ratio, 2))
 	nv = int(ratio*(ratio+3)/2)+1
 	ne = 3*ratio
 	populateVertices()

@@ -777,7 +777,19 @@ func getPawnMoves(armyIndex, netIndex):
 	
 	return moves
 
-# knight remains on starting orientation, i.e. up => up, down => down always
+func getFersMoves(armyIndex, netIndex):
+	var moves = []
+	
+	for move in vertexMoves[netIndex]:
+		if emptyNetIndex(move):
+			moves.append([move, false])
+	
+	for move in edgeMoves[netIndex]:
+		if hostilePieceInNetIndex(armyIndex, netIndex):
+			moves.append([move, true])
+	
+	return moves
+
 func getKnightMoves(armyIndex, netIndex):
 	var moves = []
 	
@@ -845,7 +857,7 @@ func process_input(delta):
 			var netIndex = lesser.getNetIndex()
 			board.resetColors()
 			var armyIndex = 0
-			var moves = getKnightMoves(armyIndex, netIndex)
+			var moves = getFersMoves(armyIndex, netIndex)
 			var white = Color(1.0, 1.0, 1.0, 1.0)
 			var yellow = Color(1.0, 1.0, 0.0, 1.0)
 			var red = Color(1.0, 0.0, 0.0, 1.0)
