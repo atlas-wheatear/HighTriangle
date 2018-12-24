@@ -10,10 +10,10 @@ var position
 var rotationAxis
 var rotationAngle
 var great
-var rookBodyMaterial
+var crownBodyMaterial
 
 func _ready():
-	add_to_group("RookBodies")
+	add_to_group("CrownBodies")
 	rotationAngle = 0
 	rotationAxis = Vector3(0, 1, 0)
 
@@ -22,9 +22,9 @@ func place(argArmyIndex, argPieceIndex, argNetIndex):
 	pieceIndex = argPieceIndex
 	netIndex = argNetIndex
 	
-	rookBodyMaterial = SpatialMaterial.new()
-	rookBodyMaterial.albedo_color = armyColors[armyIndex]
-	$rookGodot.set_surface_material(0, rookBodyMaterial)
+	crownBodyMaterial = SpatialMaterial.new()
+	crownBodyMaterial.albedo_color = armyColors[armyIndex]
+	$crownGodot.set_surface_material(0, crownBodyMaterial)
 	
 	var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
 	var normal = lesserBody.getNormal()

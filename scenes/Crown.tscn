@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://media/crown.dae" type="PackedScene" id=1]
+[ext_resource path="res://scripts/CrownBody.gd" type="Script" id=2]
+
+[sub_resource type="CapsuleShape" id=1]
+
+radius = 0.0532357
+height = 0.2149
+
+[node name="CrownBody" instance=ExtResource( 1 )]
+
+collision_layer = 0
+collision_mask = 0
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="crownGodot" parent="." index="0"]
+
+transform = Transform( 0.008, 0, 0, 0, 0.008, 0, 0, 0, 0.008, 0, 0, 0 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="." index="2"]
+
+transform = Transform( 1, -6.51683e-07, 5.30863e-14, 5.30863e-14, 1.62921e-07, 1, -6.51683e-07, -1, 1.62921e-07, 0, 0.15, 0 )
+shape = SubResource( 1 )
+disabled = false
+_sections_unfolded = [ "Transform" ]
+
+

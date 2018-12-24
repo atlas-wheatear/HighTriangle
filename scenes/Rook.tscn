@@ -16,6 +16,10 @@ collision_mask = 0
 script = ExtResource( 2 )
 _sections_unfolded = [ "Axis Lock", "Collision", "Transform" ]
 
+[node name="rookGodot" parent="." index="0"]
+
+_sections_unfolded = [ "Transform" ]
+
 [node name="RookCollisionShape" type="CollisionShape" parent="." index="2"]
 
 transform = Transform( 1, -6.51683e-07, 5.30863e-14, 5.30863e-14, 1.62921e-07, 1, -6.51683e-07, -1, 1.62921e-07, 0, 1, 0 )

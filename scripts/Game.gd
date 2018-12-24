@@ -6,6 +6,7 @@ var board
 
 # scenes
 var rookScene
+var crownScene
 
 var turnLeft = 0
 var turnRight = 0
@@ -559,7 +560,7 @@ func scanForRookMoves(armyIndex, line, moves):
 			var move = [iNetIndex, true]
 			 
 			# if move is not already in moves
-			if moves.has(move):
+			if not moves.has(move):
 				# append move to moves
 				moves.append(move)
                        
@@ -851,7 +852,16 @@ func _ready():
 	rookInstance.set_name("rookInstance")
 	add_child(rookInstance)
 	var rookBody = get_tree().get_nodes_in_group("RookBodies")[0]
-	rookBody.place(0, 0, 56)
+	rookBody.place(2, 0, 56)
+	
+	crownScene = load("res://scenes/Crown.tscn")
+	var crownInstance = crownScene.instance()
+	crownInstance.set_name("crownInstance")
+	add_child(crownInstance)
+	var crownBody = get_tree().get_nodes_in_group("CrownBodies")[0]
+	crownBody.place(1, 0, 20)
+	
+	pieces[20] = [1, "crown"]
 
 func _process(delta):
 	process_input(delta)
@@ -874,6 +884,7 @@ func process_input(delta):
 			var green = Color(0.0, 1.0, 0.0, 1.0)
 			
 			for move in moves:
+				# if move is capture
 				if move[1]:
 					board.setColor(move[0], yellow)
 				else:
