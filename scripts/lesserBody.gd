@@ -8,9 +8,13 @@ var netIndex
 var shape
 var centroid = Vector3(0.0, 0.0, 0.0)
 var normal
+var great
 
 func _ready():
 	add_to_group("lesserBodies")
+
+func getGreat():
+	return great
 
 func getNetIndex():
 	return netIndex
@@ -27,7 +31,8 @@ func resetColor():
 func setColor(color):
 	lesserMeshMaterial.albedo_color = color
 
-func setup(argIndex, argNormal, vertices):
+func setup(argGreat, argIndex, argNormal, vertices):
+	great = argGreat
 	normal = argNormal
 	netIndex = argIndex
 	

@@ -867,7 +867,7 @@ func process_input(delta):
 			var netIndex = lesser.getNetIndex()
 			board.resetColors()
 			var armyIndex = 0
-			var moves = getFersMoves(armyIndex, netIndex)
+			var moves = getRookMoves(armyIndex, netIndex)
 			var white = Color(1.0, 1.0, 1.0, 1.0)
 			var yellow = Color(1.0, 1.0, 0.0, 1.0)
 			var red = Color(1.0, 0.0, 0.0, 1.0)
@@ -879,6 +879,9 @@ func process_input(delta):
 				else:
 					board.setColor(move[0], green)
 			board.setColor(netIndex, red)
+			
+			var rookBody = get_tree().get_nodes_in_group("RookBodies")[0]
+			rookBody.move(netIndex)
 	
 	if Input.is_action_pressed("ui_left"):
 		turnLeft = 1

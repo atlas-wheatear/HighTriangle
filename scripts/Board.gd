@@ -300,13 +300,14 @@ func drawBoard():
 		lesserInstance.set_name("lesserInstance" + str(i))
 		add_child(lesserInstance)
 		var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[i]
-		var normal = normals[getGreat(i)]
+		var great = getGreat(i)
+		var normal = normals[great]
 		var lesserVertices = []
 		
 		for j in range(3):
 			lesserVertices.append(vertices[lessers[i][2-j]])
 		
-		lesserBody.setup(i, normal, lesserVertices)
+		lesserBody.setup(great, i, normal, lesserVertices)
 
 func _ready():
 	pass
