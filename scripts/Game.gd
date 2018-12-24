@@ -4,6 +4,9 @@ var cameraBody
 var camera
 var board
 
+# scenes
+var rookScene
+
 var turnLeft = 0
 var turnRight = 0
 var turnDown = 0
@@ -842,6 +845,13 @@ func _ready():
 	populateRookNotation()
 	populateEdgeMoves()
 	populateVertexMoves()
+	
+	rookScene = load("res://scenes/Rook.tscn")
+	var rookInstance = rookScene.instance()
+	rookInstance.set_name("rookInstance")
+	add_child(rookInstance)
+	var rookBody = get_tree().get_nodes_in_group("RookBodies")[0]
+	rookBody.place(0, 0, 56)
 
 func _process(delta):
 	process_input(delta)

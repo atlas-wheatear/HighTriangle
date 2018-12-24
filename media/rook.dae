@@ -5,8 +5,8 @@
 		<author>Anonymous</author>
 		<authoring_tool>Collada Exporter for Blender 2.6+, by Juan Linietsky (juan@codenix.com)</authoring_tool>
 	</contributor>
-	<created>2018-12-21T19:14:33Z</created>
-	<modified>2018-12-21T19:14:33Z</modified>
+	<created>2018-12-24T08:06:17Z</created>
+	<modified>2018-12-24T08:06:17Z</modified>
 	<unit meter="1.0" name="meter"/>
 	<up_axis>Z_UP</up_axis>
 </asset>
@@ -47,7 +47,7 @@
 <library_visual_scenes>
 	<visual_scene id="id-scene-1" name="scene">
 		<node id="rookGodot" name="rookGodot" type="NODE">
-			<matrix sid="transform"> 0.017000019550323486 0.0 0.0 0.0 0.0 0.017000019550323486 0.0 0.0 0.0 0.0 0.017000019550323486 0.0 0.0 0.0 0.0 1.0  </matrix>
+			<matrix sid="transform"> 0.07999998331069946 0.0 0.0 0.0 0.0 0.07999998331069946 0.0 0.0 0.0 0.0 0.07999998331069946 0.0 0.0 0.0 0.0 1.0  </matrix>
 			<instance_geometry url="#id-mesh-2">
 			</instance_geometry>
 		</node>

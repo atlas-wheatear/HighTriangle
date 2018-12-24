@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://media/rook.dae" type="PackedScene" id=1]
+[ext_resource path="res://scripts/RookBody.gd" type="Script" id=2]
+
+[sub_resource type="CapsuleShape" id=1]
+
+radius = 1.0
+height = 1.0
+
+[node name="RookBody" instance=ExtResource( 1 )]
+
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+collision_layer = 0
+collision_mask = 0
+script = ExtResource( 2 )
+_sections_unfolded = [ "Axis Lock", "Collision", "Transform" ]
+
+[node name="RookCollisionShape" type="CollisionShape" parent="." index="2"]
+
+transform = Transform( 1, -6.51683e-07, 5.30863e-14, 5.30863e-14, 1.62921e-07, 1, -6.51683e-07, -1, 1.62921e-07, 0, 1, 0 )
+shape = SubResource( 1 )
+disabled = false
+_sections_unfolded = [ "Transform" ]
+
+
