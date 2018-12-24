@@ -5,6 +5,8 @@ const r2 = sqrt(2)
 
 var lineColor = Color(0.1, 0.1, 0.1)
 var defaultLesserColor = Color(0.9, 0.9, 0.9, 1.0)
+var capture_color = Color(1.0, 1.0, 0.0, 1.0)
+var normal_move_color = Color(0.0, 1.0, 0.0, 1.0)
 
 var vertices = []
 var edges = []
@@ -317,15 +319,15 @@ func setup(argRatio, argS):
 	s = argS
 	createBoard()
 
-func setColor(netIndex, newColor):
-	var lesser = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
-	lesser.setColor(newColor)
-
-func resetColors():
-	var lessers = get_tree().get_nodes_in_group("lesserBodies")
-	
-	for lesser in lessers:
-		lesser.resetColor()
+func color_moves(netIndex, moves):
+	for lesser_body in lesserBodies:
+		lesser_body.resetColor()
+		
+	for move in moves:
+		if move[1]:
+			lesserBodies[move[0]].setColor(capture_color)
+		else:
+			lesserBodies[move[0]].setColor(normal_move_color)
 
 func createBoard():
 	normals.append(Vector3(0,1,0))
@@ -344,3 +346,4 @@ func createBoard():
 	populateLesserToNet()
 	populateLessers()
 	drawBoard()
+	lesserBodies = get_tree().get_nodes_in_group("lesserBodies")
