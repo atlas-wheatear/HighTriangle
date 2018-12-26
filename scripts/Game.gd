@@ -84,10 +84,15 @@ func _input(event):
 			else:
 				if captureSelected:
 					if selectedNetIndex != currentNetIndex:
-						print("doing nothing")
-					pieceSelected = false
-					captureSelected = false
-					board.reset_colors()
+						if move_helper.legal_move(currentNetIndex, selectedNetIndex):
+							move_helper.move(currentNetIndex, selectedNetIndex)
+							pieceSelected = false
+							captureSelected = false
+							board.reset_colors()
+					else:
+						pieceSelected = false
+						captureSelected = false
+						board.reset_colors()
 
 func _process(delta):
 	process_input(delta)

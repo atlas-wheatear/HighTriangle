@@ -847,6 +847,22 @@ func getMoves(netIndex):
 	
 	return moves
 
+func legal_move(firstNetIndex, secondNetIndex):
+	var moves = getMoves(firstNetIndex)
+	
+	for move in moves:
+		if secondNetIndex == move[0]:
+			return true
+			
+	return false
+
+func move(firstNetIndex, secondNetIndex):
+	var piece = pieces[firstNetIndex][0]
+	piece.move(secondNetIndex)
+	
+	pieces[secondNetIndex] = [piece]
+	pieces[firstNetIndex] = []
+
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
