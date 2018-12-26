@@ -41,6 +41,7 @@ func _ready():
 	move_helper = load("res://scripts/MoveHelper.gd").new()
 	
 	rookScene = load("res://scenes/Rook.tscn")
+	fersScene = load("res://scenes/Fers.tscn")
 	
 	var rookInstance1 = rookScene.instance()
 	rookInstance1.set_name("rookInstance1")
@@ -55,6 +56,13 @@ func _ready():
 	var rookBody2 = get_tree().get_nodes_in_group("RookBodies")[1]
 	rookBody2.place(move_helper, 1, 0, 24)
 	pieces[24] = [rookBody2]
+	
+	var fersInstance = fersScene.instance()
+	fersInstance.set_name("fersInstance")
+	add_child(fersInstance)
+	var fersBody = get_tree().get_nodes_in_group("FersBodies")[0]
+	fersBody.place(move_helper, 0, 0, 2)
+	pieces[2] = [fersBody]
 	
 	move_helper.setup(ratio, pieces, board)
 	

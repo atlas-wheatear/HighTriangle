@@ -45,10 +45,6 @@ func place(argMoveHelper, argArmyIndex, argPieceIndex, argNetIndex):
 		rotate(rotationAxis, rotationAngle)
 	move_and_collide(position)
 
-func getMoves():
-	var moves = moveHelper.getRookMoves(armyIndex, netIndex)
-	return moves
-
 func move(newNetIndex):
 	var lesserBodies = get_tree().get_nodes_in_group("lesserBodies")
 	var oldLesser = lesserBodies[netIndex]

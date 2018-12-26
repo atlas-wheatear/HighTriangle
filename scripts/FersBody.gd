@@ -9,15 +9,19 @@ var armyColors = [Color(1.0, 1.0, 1.0, 1.0), Color(0.2, 0.2, 0.2, 1.0), Color(1.
 var position
 var rotationAxis
 var rotationAngle
-var great
 var fersBodyMaterial
+var moveHelper
+
+# tetrahedral angle
+var tAngle = acos(-1.0/3.0)
 
 func _ready():
 	add_to_group("FersBodies")
 	rotationAngle = 0
 	rotationAxis = Vector3(0, 1, 0)
 
-func place(argArmyIndex, argPieceIndex, argNetIndex):
+func place(argMoveHelper, argArmyIndex, argPieceIndex, argNetIndex):
+	moveHelper = argMoveHelper
 	armyIndex = argArmyIndex
 	pieceIndex = argPieceIndex
 	netIndex = argNetIndex
@@ -29,7 +33,7 @@ func place(argArmyIndex, argPieceIndex, argNetIndex):
 	var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
 	var normal = lesserBody.getNormal()
 	position = lesserBody.getCentroid()
-	great = lesserBody.getGreat()
+	var great = lesserBody.getGreat()
 	
 	if great != 0:
 		var up = Vector3(0, 1, 0)
@@ -42,32 +46,25 @@ func place(argArmyIndex, argPieceIndex, argNetIndex):
 	move_and_collide(position)
 
 func move(newNetIndex):
-	var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[newNetIndex]
-	var newGreat = lesserBody.getGreat()
+	var lesserBodies = get_tree().get_nodes_in_group("lesserBodies")
+	var oldLesser = lesserBodies[netIndex]
+	var newLesser = lesserBodies[newNetIndex]
 	
 	# reset to origin
 	move_and_collide(-position)
 	
-	# if both greats are not both 0
-	if great != 0:
-		rotate(rotationAxis, -rotationAngle)
+	var rotationArray = moveHelper.getRotate(oldLesser, newLesser)
 	
-	if newGreat != 0:
-		var normal = lesserBody.getNormal()
-		
-		var up = Vector3(0, 1, 0)
-		
-		rotationAngle = acos(normal.dot(up))
-		
-		rotationAxis = up.cross(normal).normalized()
-		
-		rotate(rotationAxis, rotationAngle)
+	if rotationArray[0]:
+		rotate(rotationArray[1], tAngle)
 	
-	position = lesserBody.getCentroid()
+	if rotationArray[2]:
+		rotate(rotationArray[3], tAngle)
+	
+	position = newLesser.getCentroid()
 	move_and_collide(position)
 	
 	netIndex = newNetIndex
-	great = newGreat
 
 func getArmyIndex():
 	return armyIndex
@@ -80,3 +77,6 @@ func getNetIndex():
 
 func isPiece():
 	return true
+
+func getType():
+	return "fers"

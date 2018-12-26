@@ -785,7 +785,7 @@ func getPawnMoves(armyIndex, netIndex):
 			moves.append([move, false])
 	
 	for move in vertexMoves[netIndex]:
-		if hostilePieceInNetIndex(armyIndex, netIndex):
+		if hostilePieceInNetIndex(armyIndex, move):
 			moves.append([move, true])
 	
 	return moves
@@ -798,7 +798,7 @@ func getFersMoves(armyIndex, netIndex):
 			moves.append([move, false])
 	
 	for move in edgeMoves[netIndex]:
-		if hostilePieceInNetIndex(armyIndex, netIndex):
+		if hostilePieceInNetIndex(armyIndex, move):
 			moves.append([move, true])
 	
 	return moves
@@ -844,6 +844,10 @@ func getMoves(netIndex):
 	match type:
 		"rook":
 			moves = getRookMoves(armyIndex, netIndex)
+		"fers":
+			moves = getFersMoves(armyIndex, netIndex)
+		"crown":
+			moves = getFersMoves(armyIndex, netIndex)
 	
 	return moves
 
