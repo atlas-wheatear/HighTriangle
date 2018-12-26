@@ -18,9 +18,10 @@ var turnDown = 0
 var turnUp = 0
 
 # game states
-var currentNetIndex
+var currentNetIndex = -1
 var pieceSelected = false
-var selectedNetIndex
+var selectedNetIndex = -1
+var captureSelected = false
 
 func _ready():
 	var pieces = []
@@ -65,10 +66,11 @@ func _input(event):
 					var collided = rayCast.collider
 					currentNetIndex = collided.getNetIndex()
 			else:
-				if not move_helper.emptyNetIndex(currentNetIndex):
-					var moves = move_helper.getMoves(currentNetIndex)
-					board.color_moves(currentNetIndex, moves)
-					pieceSelected = true
+				if currentNetIndex > 0:
+					if not move_helper.emptyNetIndex(currentNetIndex):
+						var moves = move_helper.getMoves(currentNetIndex)
+						board.color_moves(currentNetIndex, moves)
+						pieceSelected = true
 		else:
 			if event.pressed:
 				var mousePosition = get_viewport().get_mouse_position()
@@ -78,13 +80,18 @@ func _input(event):
 				if not rayCast.empty():
 					var collided = rayCast.collider
 					selectedNetIndex = collided.getNetIndex()
+					captureSelected = true
 			else:
-				board.reset_colors()
-				pieceSelected = false
+				if captureSelected:
+					if selectedNetIndex != currentNetIndex:
+						print("doing nothing")
+					pieceSelected = false
+					captureSelected = false
+					board.reset_colors()
 
 func _process(delta):
 	process_input(delta)
-	
+
 func process_input(delta):
 	if Input.is_action_pressed("ui_left"):
 		turnLeft = 1
