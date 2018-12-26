@@ -41,14 +41,20 @@ func _ready():
 	move_helper = load("res://scripts/MoveHelper.gd").new()
 	
 	rookScene = load("res://scenes/Rook.tscn")
-	var rookInstance = rookScene.instance()
-	rookInstance.set_name("rookInstance")
 	
-	add_child(rookInstance)
-	var rookBody = get_tree().get_nodes_in_group("RookBodies")[0]
-	rookBody.place(move_helper, 2, 0, 56)
+	var rookInstance1 = rookScene.instance()
+	rookInstance1.set_name("rookInstance1")
+	add_child(rookInstance1)
+	var rookBody1 = get_tree().get_nodes_in_group("RookBodies")[0]
+	rookBody1.place(move_helper, 2, 0, 56)
+	pieces[56] = [rookBody1]
 	
-	pieces[56] = [rookBody]
+	var rookInstance2 = rookScene.instance()
+	rookInstance2.set_name("rookInstance2")
+	add_child(rookInstance2)
+	var rookBody2 = get_tree().get_nodes_in_group("RookBodies")[1]
+	rookBody2.place(move_helper, 1, 0, 24)
+	pieces[24] = [rookBody2]
 	
 	move_helper.setup(ratio, pieces, board)
 	

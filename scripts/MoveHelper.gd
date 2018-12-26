@@ -65,7 +65,7 @@ func hostilePieceInNetIndex(armyIndex, netIndex):
 	if piece.empty():
 		return false
 	
-	if armyIndex != piece[0]:
+	if armyIndex != piece[0].getArmyIndex():
 		return true
 	
 	return false
@@ -858,6 +858,11 @@ func legal_move(firstNetIndex, secondNetIndex):
 
 func move(firstNetIndex, secondNetIndex):
 	var piece = pieces[firstNetIndex][0]
+	var armyIndex = piece.getArmyIndex()
+	
+	if hostilePieceInNetIndex(armyIndex, secondNetIndex):
+		pieces[secondNetIndex][0].queue_free()
+	
 	piece.move(secondNetIndex)
 	
 	pieces[secondNetIndex] = [piece]
