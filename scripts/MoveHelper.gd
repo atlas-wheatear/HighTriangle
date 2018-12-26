@@ -65,7 +65,7 @@ func hostilePieceInNetIndex(armyIndex, netIndex):
 	if piece.empty():
 		return false
 	
-	if armyIndex != piece[0].getArmyIndex():
+	if armyIndex != piece[0].get_army_index():
 		return true
 	
 	return false
@@ -839,8 +839,8 @@ func getCrownMoves(armyIndex, netIndex):
 func getMoves(netIndex):
 	var piece = pieces[netIndex][0]
 	var moves
-	var type = piece.getType()
-	var armyIndex = piece.getArmyIndex()
+	var type = piece.get_type()
+	var armyIndex = piece.get_army_index()
 	match type:
 		"rook":
 			moves = getRookMoves(armyIndex, netIndex)
@@ -862,7 +862,7 @@ func legal_move(firstNetIndex, secondNetIndex):
 
 func move(firstNetIndex, secondNetIndex):
 	var piece = pieces[firstNetIndex][0]
-	var armyIndex = piece.getArmyIndex()
+	var armyIndex = piece.get_army_index()
 	
 	if hostilePieceInNetIndex(armyIndex, secondNetIndex):
 		pieces[secondNetIndex][0].queue_free()

@@ -46,22 +46,22 @@ func _ready():
 	var rookInstance1 = rookScene.instance()
 	rookInstance1.set_name("rookInstance1")
 	add_child(rookInstance1)
-	var rookBody1 = get_tree().get_nodes_in_group("RookBodies")[0]
-	rookBody1.place(move_helper, 2, 0, 56)
+	var rookBody1 = get_tree().get_nodes_in_group("pieces")[0]
+	rookBody1.place(move_helper, 2, 0, 56, "rook")
 	pieces[56] = [rookBody1]
 	
 	var rookInstance2 = rookScene.instance()
 	rookInstance2.set_name("rookInstance2")
 	add_child(rookInstance2)
-	var rookBody2 = get_tree().get_nodes_in_group("RookBodies")[1]
-	rookBody2.place(move_helper, 1, 0, 24)
+	var rookBody2 = get_tree().get_nodes_in_group("pieces")[1]
+	rookBody2.place(move_helper, 1, 0, 24, "rook")
 	pieces[24] = [rookBody2]
 	
 	var fersInstance = fersScene.instance()
 	fersInstance.set_name("fersInstance")
 	add_child(fersInstance)
-	var fersBody = get_tree().get_nodes_in_group("FersBodies")[0]
-	fersBody.place(move_helper, 0, 0, 2)
+	var fersBody = get_tree().get_nodes_in_group("pieces")[2]
+	fersBody.place(move_helper, 0, 0, 2, "fers")
 	pieces[2] = [fersBody]
 	
 	move_helper.setup(ratio, pieces, board)

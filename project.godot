@@ -14,6 +14,10 @@ config/name="ClosureChess"
 run/main_scene="res://scenes/Board.tscn"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "piece_node" )
+
 [layer_names]
 
 3d_render/layer_1="Cameras"

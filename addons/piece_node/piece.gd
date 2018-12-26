@@ -1,34 +1,37 @@
+tool
 extends KinematicBody
 
 var armyIndex
 var pieceIndex
 var netIndex
+var type
 
 var armyColors = [Color(1.0, 1.0, 1.0, 1.0), Color(0.2, 0.2, 0.2, 1.0), Color(1.0, 0.0, 0.0, 1.0)]
 
 var position
 var rotationAxis
 var rotationAngle
-var rookBodyMaterial
+var body_material
 var moveHelper
 
 # tetrahedral angle
 var tAngle = acos(-1.0/3.0)
 
 func _ready():
-	add_to_group("RookBodies")
+	add_to_group("pieces")
 	rotationAngle = 0
 	rotationAxis = Vector3(0, 1, 0)
 
-func place(argMoveHelper, argArmyIndex, argPieceIndex, argNetIndex):
+func place(argMoveHelper, argArmyIndex, argPieceIndex, argNetIndex, argType):
 	moveHelper = argMoveHelper
 	armyIndex = argArmyIndex
 	pieceIndex = argPieceIndex
 	netIndex = argNetIndex
+	type = argType
 	
-	rookBodyMaterial = SpatialMaterial.new()
-	rookBodyMaterial.albedo_color = armyColors[armyIndex]
-	$rookGodot.set_surface_material(0, rookBodyMaterial)
+	body_material = SpatialMaterial.new()
+	body_material.albedo_color = armyColors[armyIndex]
+	$body_mesh.set_surface_material(0, body_material)
 	
 	var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
 	var normal = lesserBody.getNormal()
@@ -66,17 +69,15 @@ func move(newNetIndex):
 	
 	netIndex = newNetIndex
 
-func getArmyIndex():
+func get_army_index():
 	return armyIndex
 
-func getPieceIndex():
-	return pieceIndex
-
-func getNetIndex():
+func get_net_index():
 	return netIndex
 
-func isPiece():
+func is_piece():
 	return true
 
-func getType():
-	return "rook"
+# custom functions
+func get_type():
+	return type
