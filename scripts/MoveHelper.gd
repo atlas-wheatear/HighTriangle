@@ -82,9 +82,9 @@ func friendlyPieceInNetIndex(armyIndex, netIndex):
 	return false
 	
 func emptyNetIndex(netIndex):
-	var piece = pieces[netIndex]
+	var pieceArray = pieces[netIndex]
 	
-	if piece.empty():
+	if pieceArray.empty():
 		return true
 	
 	return false
@@ -833,6 +833,17 @@ func getCrownMoves(armyIndex, netIndex):
 			moves.append([move, false])
 		elif hostilePieceInNetIndex(armyIndex, move):
 			moves.append([move, true])
+	
+	return moves
+
+func getMoves(netIndex):
+	var piece = pieces[netIndex][0]
+	var moves
+	var type = piece.getType()
+	var armyIndex = piece.getArmyIndex()
+	match type:
+		"rook":
+			moves = getRookMoves(armyIndex, netIndex)
 	
 	return moves
 

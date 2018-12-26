@@ -319,9 +319,12 @@ func setup(argRatio, argS):
 	s = argS
 	createBoard()
 
-func color_moves(netIndex, moves):
+func reset_colors():
 	for lesser_body in lesserBodies:
 		lesser_body.resetColor()
+
+func color_moves(netIndex, moves):
+	reset_colors()
 		
 	for move in moves:
 		if move[1]:

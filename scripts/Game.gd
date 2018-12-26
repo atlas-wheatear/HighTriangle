@@ -4,7 +4,6 @@ var cameraBody
 var camera
 var board
 var move_helper
-var pieces
 
 # scenes
 var rookScene
@@ -18,8 +17,13 @@ var turnRight = 0
 var turnDown = 0
 var turnUp = 0
 
+# game states
+var currentNetIndex
+var pieceSelected = false
+var selectedNetIndex
+
 func _ready():
-	pieces = []
+	var pieces = []
 	cameraBody = $OrbitCamera
 	camera = $OrbitCamera/Camera
 	board = $Board
@@ -34,7 +38,6 @@ func _ready():
 		pieces.append([])
 	
 	move_helper = load("res://scripts/MoveHelper.gd").new()
-	move_helper.setup(ratio, pieces, board)
 	
 	rookScene = load("res://scenes/Rook.tscn")
 	var rookInstance = rookScene.instance()
@@ -43,25 +46,46 @@ func _ready():
 	add_child(rookInstance)
 	var rookBody = get_tree().get_nodes_in_group("RookBodies")[0]
 	rookBody.place(move_helper, 2, 0, 56)
-	pieces.append(rookBody)
+	
+	pieces[56] = [rookBody]
+	
+	move_helper.setup(ratio, pieces, board)
+	
+	set_process_input(true)
+
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+		if not pieceSelected:
+			if event.pressed:
+				var mousePosition = get_viewport().get_mouse_position()
+				var from = camera.project_ray_origin(mousePosition)
+				var to = from + camera.project_ray_normal(mousePosition) * 10
+				var rayCast = get_world().get_direct_space_state().intersect_ray(from, to)
+				if not rayCast.empty():
+					var collided = rayCast.collider
+					currentNetIndex = collided.getNetIndex()
+			else:
+				if not move_helper.emptyNetIndex(currentNetIndex):
+					var moves = move_helper.getMoves(currentNetIndex)
+					board.color_moves(currentNetIndex, moves)
+					pieceSelected = true
+		else:
+			if event.pressed:
+				var mousePosition = get_viewport().get_mouse_position()
+				var from = camera.project_ray_origin(mousePosition)
+				var to = from + camera.project_ray_normal(mousePosition) * 10
+				var rayCast = get_world().get_direct_space_state().intersect_ray(from, to)
+				if not rayCast.empty():
+					var collided = rayCast.collider
+					selectedNetIndex = collided.getNetIndex()
+			else:
+				board.reset_colors()
+				pieceSelected = false
 
 func _process(delta):
 	process_input(delta)
 	
 func process_input(delta):
-	if Input.is_mouse_button_pressed(BUTTON_LEFT):
-		var mousePosition = get_viewport().get_mouse_position()
-		var from = camera.project_ray_origin(mousePosition)
-		var to = from + camera.project_ray_normal(mousePosition) * 10
-		var rayCast = get_world().get_direct_space_state().intersect_ray(from, to)
-		if not rayCast.empty():
-			var collided = rayCast.collider
-			var netIndex = collided.getNetIndex()
-			var armyIndex = 2
-			if move_helper.hostilePieceInNetIndex(armyIndex, netIndex) or move_helper.emptyNetIndex(netIndex):
-				var moves = move_helper.getRookMoves(armyIndex, netIndex)
-				board.color_moves(netIndex, moves)
-	
 	if Input.is_action_pressed("ui_left"):
 		turnLeft = 1
 	if Input.is_action_pressed("ui_right"):

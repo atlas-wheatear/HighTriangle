@@ -81,3 +81,6 @@ func getNetIndex():
 
 func isPiece():
 	return true
+
+func getType():
+	return "rook"
