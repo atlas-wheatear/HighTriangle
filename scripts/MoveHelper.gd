@@ -76,7 +76,7 @@ func friendlyPieceInNetIndex(armyIndex, netIndex):
 	if piece.empty():
 		return false
 	
-	if armyIndex == piece[0]:
+	if armyIndex == piece[0].get_army_index():
 		return true
 	
 	return false
@@ -847,7 +847,11 @@ func getMoves(netIndex):
 		"fers":
 			moves = getFersMoves(armyIndex, netIndex)
 		"crown":
-			moves = getFersMoves(armyIndex, netIndex)
+			moves = getCrownMoves(armyIndex, netIndex)
+		"knight":
+			moves = getKnightMoves(armyIndex, netIndex)
+		"pawn":
+			moves = getPawnMoves(armyIndex, netIndex)
 	
 	return moves
 

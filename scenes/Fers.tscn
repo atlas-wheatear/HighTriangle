@@ -26,7 +26,7 @@ surfaces/0 = {
 radius = 1.0
 height = 1.0
 
-[node name="Scene Root" type="KinematicBody" index="0"]
+[node name="Fers" type="KinematicBody" index="0"]
 
 transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0 )
 input_ray_pickable = true
@@ -46,7 +46,7 @@ __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
 
-[node name="ferzGodot" type="MeshInstance" parent="." index="0"]
+[node name="BodyMesh" type="MeshInstance" parent="." index="0"]
 
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
 layers = 1

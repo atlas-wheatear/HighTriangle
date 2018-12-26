@@ -46,7 +46,7 @@ __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
 
-[node name="rookGodot" type="MeshInstance" parent="." index="0"]
+[node name="BodyMesh" type="MeshInstance" parent="." index="0"]
 
 transform = Transform( 0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0, 0 )
 layers = 1

@@ -2,7 +2,6 @@ tool
 extends KinematicBody
 
 var armyIndex
-var pieceIndex
 var netIndex
 var type
 
@@ -22,16 +21,15 @@ func _ready():
 	rotationAngle = 0
 	rotationAxis = Vector3(0, 1, 0)
 
-func place(argMoveHelper, argArmyIndex, argPieceIndex, argNetIndex, argType):
+func place(argMoveHelper, argArmyIndex, argNetIndex, argType):
 	moveHelper = argMoveHelper
 	armyIndex = argArmyIndex
-	pieceIndex = argPieceIndex
 	netIndex = argNetIndex
 	type = argType
 	
 	body_material = SpatialMaterial.new()
 	body_material.albedo_color = armyColors[armyIndex]
-	$body_mesh.set_surface_material(0, body_material)
+	$BodyMesh.set_surface_material(0, body_material)
 	
 	var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
 	var normal = lesserBody.getNormal()
@@ -74,9 +72,6 @@ func get_army_index():
 
 func get_net_index():
 	return netIndex
-
-func is_piece():
-	return true
 
 # custom functions
 func get_type():

@@ -5,7 +5,7 @@ extends MeshInstance
 # var b = "textvar"
 
 func _ready():
-	pass
+	set_name("BodyMesh")
 
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.
