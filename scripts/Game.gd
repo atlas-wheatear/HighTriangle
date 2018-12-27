@@ -94,27 +94,20 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
-		if not pieceSelected:
-			if not event.pressed:
-				var mousePosition = get_viewport().get_mouse_position()
-				var from = camera.project_ray_origin(mousePosition)
-				var to = from + camera.project_ray_normal(mousePosition) * 10
-				var rayCast = get_world().get_direct_space_state().intersect_ray(from, to)
-				if not rayCast.empty():
-					var collided = rayCast.collider
+		if not event.pressed:
+			var mousePosition = get_viewport().get_mouse_position()
+			var from = camera.project_ray_origin(mousePosition)
+			var to = from + camera.project_ray_normal(mousePosition) * 10
+			var rayCast = get_world().get_direct_space_state().intersect_ray(from, to)
+			if not rayCast.empty():
+				var collided = rayCast.collider
+				if not pieceSelected:
 					currentNetIndex = collided.getNetIndex()
 					if not move_helper.emptyNetIndex(currentNetIndex):
 						var moves = move_helper.getMoves(currentNetIndex)
 						board.color_moves(currentNetIndex, moves)
 						pieceSelected = true
-		else:
-			if not event.pressed:
-				var mousePosition = get_viewport().get_mouse_position()
-				var from = camera.project_ray_origin(mousePosition)
-				var to = from + camera.project_ray_normal(mousePosition) * 10
-				var rayCast = get_world().get_direct_space_state().intersect_ray(from, to)
-				if not rayCast.empty():
-					var collided = rayCast.collider
+				else:
 					selectedNetIndex = collided.getNetIndex()
 					if selectedNetIndex != currentNetIndex:
 						if move_helper.legal_move(currentNetIndex, selectedNetIndex):
