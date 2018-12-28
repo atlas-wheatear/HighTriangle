@@ -42,12 +42,7 @@ func place(arg_move_helper, arg_army_index, arg_net_index, arg_type):
 		rotation_axis = up.cross(normal).normalized()
 		
 		rotate(rotation_axis, t_angle)
-		
-		var rotate_transform = Transform()
-		rotate_transform = rotate_transform.rotated(rotation_axis, -t_angle)
-		rotated_position = rotate_transform * position
-	
-	translate(rotated_position)
+	global_translate(position)
 
 func move(new_net_index):
 	var lesser_bodies = get_tree().get_nodes_in_group("lesser_bodies")
@@ -56,15 +51,8 @@ func move(new_net_index):
 	
 	var rotation_array = move_helper.get_rotate(old_lesser, new_lesser)
 	
-	var rotated_position = position
-	
-	if old_lesser.get_great() != 0:
-		var rotate_transform = Transform()
-		rotate_transform = rotate_transform.rotated(rotation_array[1], t_angle)
-		rotated_position = rotate_transform * position
-	
 	# reset to origin
-	translate(-rotated_position)
+	global_translate(-position)
 	
 	if rotation_array[0]:
 		rotate(rotation_array[1], t_angle)
@@ -73,13 +61,8 @@ func move(new_net_index):
 		rotate(rotation_array[3], t_angle)
 	
 	position = new_lesser.get_centroid()
-	rotated_position = position
-	
-	if new_lesser.get_great() != 0:
-		var rotate_transform = Transform()
-		rotate_transform = rotate_transform.rotated(rotation_array[3], -t_angle)
-		rotated_position = rotate_transform * position
-	translate(rotated_position)
+
+	global_translate(position)
 	
 	net_index = new_net_index
 

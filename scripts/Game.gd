@@ -40,6 +40,10 @@ func _ready():
 	
 	move_helper = load("res://scripts/MoveHelper.gd").new()
 	
+	crown_scene = load("res://scenes/Crown.tscn")
+	fers_scene = load("res://scenes/Fers.tscn")
+	knight_scene = load("res://scenes/Knight.tscn")
+	pawn_scene = load("res://scenes/Pawn.tscn")
 	rook_scene = load("res://scenes/Rook.tscn")
 	
 	var rook_instance = rook_scene.instance()
@@ -48,6 +52,34 @@ func _ready():
 	var rook_body = get_tree().get_nodes_in_group("pieces")[0]
 	rook_body.place(move_helper, 2, 56, "rook")
 	pieces[56] = [rook_body]
+	
+	var crown_instance = crown_scene.instance()
+	crown_instance.set_name("crown_instance")
+	add_child(crown_instance)
+	var crown_body = get_tree().get_nodes_in_group("pieces")[1]
+	crown_body.place(move_helper, 0, 30, "crown")
+	pieces[30] = [crown_body]
+	
+	var fers_instance = fers_scene.instance()
+	fers_instance.set_name("fers_instance")
+	add_child(fers_instance)
+	var fers_body = get_tree().get_nodes_in_group("pieces")[2]
+	fers_body.place(move_helper, 1, 100, "fers")
+	pieces[100] = [fers_body]
+	
+	var knight_instance = knight_scene.instance()
+	knight_instance.set_name("knight_instance")
+	add_child(knight_instance)
+	var knight_body = get_tree().get_nodes_in_group("pieces")[3]
+	knight_body.place(move_helper, 2, 121, "knight")
+	pieces[121] = [knight_body]
+	
+	var pawn_instance = pawn_scene.instance()
+	pawn_instance.set_name("pawn_instance")
+	add_child(pawn_instance)
+	var pawn_body = get_tree().get_nodes_in_group("pieces")[4]
+	pawn_body.place(move_helper, 0, 90, "pawn")
+	pieces[90] = [pawn_body] 
 	
 	move_helper.setup(ratio, pieces, board)
 	
