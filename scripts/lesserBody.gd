@@ -1,65 +1,59 @@
 extends StaticBody
 
-signal picked
-
-const defaultLesserColor = Color(0.8, 0.8, 0.8, 1.0)
-var lesserMeshMaterial
-var netIndex
+const default_lesser_color = Color(0.8, 0.8, 0.8, 1.0)
+var lesser_mesh_material
+var net_index
 var shape
 var centroid = Vector3(0.0, 0.0, 0.0)
 var normal
 var great
 
 func _ready():
-	add_to_group("lesserBodies")
+	add_to_group("lesser_bodies")
 
-func getGreat():
+func get_great():
 	return great
 
-func getNetIndex():
-	return netIndex
+func get_net_index():
+	return net_index
 
-func getCentroid():
+func get_centroid():
 	return centroid
 
-func getNormal():
+func get_normal():
 	return normal
 
-func resetColor():
-	lesserMeshMaterial.albedo_color = defaultLesserColor
+func reset_color():
+	lesser_mesh_material.albedo_color = default_lesser_color
 
-func setColor(color):
-	lesserMeshMaterial.albedo_color = color
+func set_color(color):
+	lesser_mesh_material.albedo_color = color
 
-func setup(argGreat, argIndex, argNormal, vertices):
-	great = argGreat
-	normal = argNormal
-	netIndex = argIndex
+func setup(arg_great, arg_net_index, arg_normal, vertices):
+	great = arg_great
+	normal = arg_normal
+	net_index = arg_net_index
 	
-	self.set_name("lesserBody" + str(netIndex))
+	self.set_name("lesserBody" + str(net_index))
 	
-	lesserMeshMaterial = SpatialMaterial.new()
-	lesserMeshMaterial.albedo_color = defaultLesserColor
+	lesser_mesh_material = SpatialMaterial.new()
+	lesser_mesh_material.albedo_color = default_lesser_color
 	
-	var surfaceTool = SurfaceTool.new()
-	surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var surface_tool = SurfaceTool.new()
+	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
 	for j in range(3):
 		# needed to avoid complaints
-		surfaceTool.add_index(j)
-		surfaceTool.add_normal(normal)
-		surfaceTool.add_vertex(vertices[j])
+		surface_tool.add_index(j)
+		surface_tool.add_normal(normal)
+		surface_tool.add_vertex(vertices[j])
 		
 		# sum vectors
 		centroid += vertices[j]
 	
 	centroid /= 3.0
-	
-	var mesh = surfaceTool.commit()
+	surface_tool.index()
+	var mesh = surface_tool.commit()
 	$lesserMesh.mesh = mesh
-	$lesserMesh.set_surface_material(0, lesserMeshMaterial)
-	
+	$lesserMesh.set_surface_material(0, lesser_mesh_material)
 	$lesserCollisionShape.shape = mesh.create_trimesh_shape()
-	
-func isPiece():
-	return false

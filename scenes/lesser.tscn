@@ -32,5 +32,6 @@ skeleton = NodePath("..")
 
 shape = null
 disabled = false
+_sections_unfolded = [ "Visibility" ]
 
 

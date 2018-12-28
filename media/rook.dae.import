@@ -11,8 +11,8 @@ dest_files=[ "res://.import/rook.dae-a2c9e57f64f1be8ab490331536f60fbf.scn" ]
 
 [params]
 
-nodes/root_type="PieceNode"
-nodes/root_name="Rook"
+nodes/root_type="Spatial"
+nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
 nodes/storage=0

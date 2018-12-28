@@ -3,8 +3,7 @@ extends MeshInstance
 const r3 = sqrt(3)
 const r2 = sqrt(2)
 
-var lineColor = Color(0.1, 0.1, 0.1)
-var defaultLesserColor = Color(0.9, 0.9, 0.9, 1.0)
+var line_color = Color(0.1, 0.1, 0.1)
 var capture_color = Color(1.0, 1.0, 0.0, 1.0)
 var normal_move_color = Color(0.0, 1.0, 0.0, 1.0)
 
@@ -16,14 +15,11 @@ var ratio
 var s
 
 # list of lessermeshes, materials and collision shapes
-var lesserBodies = []
-var lesserMeshes = []
-var lesserMeshesMaterials = []
-var lesserMeshesCollisionShapes = []
+var lesser_bodies = []
 
 # conversion arrays
-var netToLesser = []
-var lesserToNet = []
+var net_to_lesser = []
+var lesser_to_net = []
 
 # number vars, per GREAT NOT BOARD
 var nv
@@ -43,7 +39,7 @@ var normals = []
 
 # remember definition of XYZ!!!
 
-func populateVertices():
+func populate_vertices():
 	
 	var t = 2.0*PI/3.0
 	
@@ -59,7 +55,7 @@ func populateVertices():
 	rotD = rotD.rotated(ADB.normalized(), t)
 	rotD = rotD.rotated(normals[3], t)
 	
-	var tempv = [[], [], [], []]
+	var temp_v = [[], [], [], []]
 	
 	var ll = s / float(ratio)
 	
@@ -75,22 +71,22 @@ func populateVertices():
 			# face A
 			# calculate vertex
 			var vA = br + Vector3(float(j)*ll, 0.0, 0.0)
-			tempv[0].append(vA)
+			temp_v[0].append(vA)
 			
 			# face B 
-			tempv[1].append(rotB * vA)
+			temp_v[1].append(rotB * vA)
 
 			# face C
-			tempv[2].append(rotC * vA)
+			temp_v[2].append(rotC * vA)
 			
 			# face D
-			tempv[3].append(rotD * vA)
+			temp_v[3].append(rotD * vA)
 	
-	for great in tempv:
+	for great in temp_v:
 		for vertex in great:
 			vertices.append(vertex)
 
-func populateEdges():
+func populate_edges():
 	# iterate 'ratio' times 
 	for i in range(ratio):
 		# / lines or up right
@@ -126,46 +122,45 @@ func populateEdges():
 		for j in range(4):
 			edges.append([fvl+nv*j, svl+nv*j])
 
-func populateNetToLesser():
+func populate_net_to_lesser():
 	# iterate through rows in top three great triangles of net
 	for i in range(ratio):
 		# iterate through columns of top left great triangle of net
 		for j in range(2*(ratio-i)-1):
 			# add specified triangle index to  conversion array
-			netToLesser.append(pow(ratio, 2)+2*ratio-2+2*(ratio-1)*i-pow(i,2)-j)
+			net_to_lesser.append(pow(ratio, 2)+2*ratio-2+2*(ratio-1)*i-pow(i,2)-j)
            
 		# iterate through columns of centre great triangle of net
 		for j in range(2*i+1):
 			# add specified triangle index to  conversion array
-			netToLesser.append(pow(ratio,2)-1-pow(i,2)-2*i+j)
+			net_to_lesser.append(pow(ratio,2)-1-pow(i,2)-2*i+j)
            
 		# iterate through columns of top right great triangle of net
 		for j in range(2*(ratio-i)-1):
 			# add specified triangle index to  conversion array
-			netToLesser.append(3*pow(ratio,2)+2*ratio-2+2*(ratio-1)*i-pow(i,2)-j)
+			net_to_lesser.append(3*pow(ratio,2)+2*ratio-2+2*(ratio-1)*i-pow(i,2)-j)
             
 	# iterate through rows in bottom great triangle of net
 	for i in range(ratio):
 		# iterate through columns in bottom great triangle of net
 		for j in range(2*(ratio-i)-1):
 			# add specified triangle index to  conversion array
-			netToLesser.append(2*pow(ratio,2)+2*ratio-2+2*(ratio-1)*i-pow(i,2)-j)
+			net_to_lesser.append(2*pow(ratio,2)+2*ratio-2+2*(ratio-1)*i-pow(i,2)-j)
 
-func populateLesserToNet():
+func populate_lesser_to_net():
+	for i in range(len(net_to_lesser)):
+		lesser_to_net.append(-1)
 	
-	for i in range(len(netToLesser)):
-		lesserToNet.append(-1)
-	
-	for i in range(len(netToLesser)):
-		lesserToNet[netToLesser[i]] = i;
+	for i in range(len(net_to_lesser)):
+		lesser_to_net[net_to_lesser[i]] = i;
 
-func addLists(list1, list2):
+func add_lists(list1, list2):
 	var list3 = []
 	for i in range(len(list1)):
 		list3.append(list1[i]+list2[i])
 	return list3
 
-func populateLessers():
+func populate_lessers():
 	# number of up triangles per face
 	var nu = int(ratio*(ratio+1)/2)
         
@@ -173,7 +168,7 @@ func populateLessers():
 	var nd = int(ratio*(ratio-1)/2)
         
 	# initialize empty lessers list (in lesser notation)
-	var lesserLessers = []
+	var lesser_lessers = []
 
 	# initialize list of 4 empty lists for temp faces
 	var temps = [[],[],[],[]]
@@ -206,7 +201,7 @@ func populateLessers():
 				var ak = [k,k,k]
                     
 				# sum arrays
-				var lesser = addLists(addLists(aj, ak), ai)
+				var lesser = add_lists(add_lists(aj, ak), ai)
                     
 				# append triangle to relevant temp
 				templ[0].append(lesser)
@@ -231,7 +226,7 @@ func populateLessers():
 				var ak = [k,k,k]
                     
 				# sum lists
-				var lesser = addLists(addLists(aj, ak), ai)
+				var lesser = add_lists(add_lists(aj, ak), ai)
                     
 				# append triangle to relevant temp
 				templ[1].append(lesser)
@@ -254,10 +249,10 @@ func populateLessers():
 				# append lesser to relevant great face
 				temps[i].append(lesser)
                     
-	# add each lesser to lesserLessers in correct order
+	# add each lesser to lesser_lessers in correct order
 	for great in temps:
 		for lesser in great:
-			lesserLessers.append(lesser)
+			lesser_lessers.append(lesser)
         
 	# set lessers as nl*4 length list of 0's
 	lessers = []
@@ -266,73 +261,73 @@ func populateLessers():
         
 	# enumerate through lesserTriangles
 	for i in range(4*nl):
-		# calculate netIndex
-		var netIndex = lesserToNet[i]
+		# calculate net_index
+		var net_index = lesser_to_net[i]
 		      
 		# swap coordinates
-		lessers[netIndex] = lesserLessers[i]
+		lessers[net_index] = lesser_lessers[i]
 
-func getGreat(netIndex):
-	var lesserIndex = netToLesser[netIndex]
-	if lesserIndex < nl:
+func get_great(net_index):
+	var lesser_index = net_to_lesser[net_index]
+	if lesser_index < nl:
 		return 0
-	if lesserIndex < 2*nl:
+	if lesser_index < 2*nl:
 		return 1
-	if lesserIndex < 3*nl:
+	if lesser_index < 3*nl:
 		return 2
 	return 3
 
-func drawBoard():
-	var surfaceToolEdge = SurfaceTool.new()
-	surfaceToolEdge.begin(Mesh.PRIMITIVE_LINES)
-	surfaceToolEdge.add_color(lineColor)
+func draw_board():
+	var surface_tool_edge = SurfaceTool.new()
+	surface_tool_edge.begin(Mesh.PRIMITIVE_LINES)
+	surface_tool_edge.add_color(line_color)
 	
 	for i in range(4*ne):
 		for j in range(2):
 			var vertex = vertices[edges[i][j]]*1.005
-			surfaceToolEdge.add_vertex(vertex)
+			surface_tool_edge.add_vertex(vertex)
 	
-	var edgeMesh = surfaceToolEdge.commit()
-	self.mesh = edgeMesh
+	var edge_mesh = surface_tool_edge.commit()
+	self.mesh = edge_mesh
 	
-	var lesserScene = load("res://scenes/lesser.tscn")
+	var lesser_scene = load("res://scenes/lesser.tscn")
 	
 	for i in range(4*nl):
-		var lesserInstance = lesserScene.instance()
-		lesserInstance.set_name("lesserInstance" + str(i))
-		add_child(lesserInstance)
-		var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[i]
-		var great = getGreat(i)
+		var lesser_instance = lesser_scene.instance()
+		lesser_instance.set_name("lesser_instance" + str(i))
+		add_child(lesser_instance)
+		var lesser_body = get_tree().get_nodes_in_group("lesser_bodies")[i]
+		var great = get_great(i)
 		var normal = normals[great]
-		var lesserVertices = []
+		var lesser_vertices = []
 		
 		for j in range(3):
-			lesserVertices.append(vertices[lessers[i][2-j]])
+			lesser_vertices.append(vertices[lessers[i][2-j]])
 		
-		lesserBody.setup(great, i, normal, lesserVertices)
+		lesser_body.setup(great, i, normal, lesser_vertices)
 
 func _ready():
 	pass
 
-func setup(argRatio, argS):
-	ratio = argRatio
-	s = argS
-	createBoard()
+func setup(arg_ratio, arg_s):
+	ratio = arg_ratio
+	s = arg_s
+	create_board()
 
 func reset_colors():
-	for lesser_body in lesserBodies:
-		lesser_body.resetColor()
+	for lesser_body in lesser_bodies:
+		lesser_body.reset_color()
 
-func color_moves(netIndex, moves):
+func color_moves(net_index, moves):
 	reset_colors()
 		
 	for move in moves:
 		if move[1]:
-			lesserBodies[move[0]].setColor(capture_color)
+			lesser_bodies[move[0]].set_color(capture_color)
 		else:
-			lesserBodies[move[0]].setColor(normal_move_color)
+			lesser_bodies[move[0]].set_color(normal_move_color)
 
-func createBoard():
+func create_board():
 	normals.append(Vector3(0,1,0))
 	var nB = ABCb.cross(ADBb)
 	normals.append(nB.normalized())
@@ -343,10 +338,10 @@ func createBoard():
 	nl = int(pow(ratio, 2))
 	nv = int(ratio*(ratio+3)/2)+1
 	ne = 3*ratio
-	populateVertices()
-	populateEdges()
-	populateNetToLesser()
-	populateLesserToNet()
-	populateLessers()
-	drawBoard()
-	lesserBodies = get_tree().get_nodes_in_group("lesserBodies")
+	populate_vertices()
+	populate_edges()
+	populate_net_to_lesser()
+	populate_lesser_to_net()
+	populate_lessers()
+	draw_board()
+	lesser_bodies = get_tree().get_nodes_in_group("lesser_bodies")

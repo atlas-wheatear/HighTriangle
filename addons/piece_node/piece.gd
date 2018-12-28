@@ -1,78 +1,93 @@
 tool
-extends KinematicBody
+extends Spatial
 
-var armyIndex
-var netIndex
+var army_index
+var net_index
 var type
 
-var armyColors = [Color(1.0, 1.0, 1.0, 1.0), Color(0.2, 0.2, 0.2, 1.0), Color(1.0, 0.0, 0.0, 1.0)]
+var army_colors = [Color(1.0, 1.0, 1.0, 1.0), Color(0.2, 0.2, 0.2, 1.0), Color(1.0, 0.0, 0.0, 1.0)]
 
 var position
-var rotationAxis
-var rotationAngle
+var rotation_axis
 var body_material
-var moveHelper
+var move_helper
 
 # tetrahedral angle
-var tAngle = acos(-1.0/3.0)
+var t_angle = acos(-1.0/3.0)
 
 func _ready():
 	add_to_group("pieces")
-	rotationAngle = 0
-	rotationAxis = Vector3(0, 1, 0)
+	rotation_axis = Vector3(0, 1, 0)
 
-func place(argMoveHelper, argArmyIndex, argNetIndex, argType):
-	moveHelper = argMoveHelper
-	armyIndex = argArmyIndex
-	netIndex = argNetIndex
-	type = argType
+func place(arg_move_helper, arg_army_index, arg_net_index, arg_type):
+	move_helper = arg_move_helper
+	army_index = arg_army_index
+	net_index = arg_net_index
+	type = arg_type
 	
 	body_material = SpatialMaterial.new()
-	body_material.albedo_color = armyColors[armyIndex]
+	body_material.albedo_color = army_colors[army_index]
 	$BodyMesh.set_surface_material(0, body_material)
 	
-	var lesserBody = get_tree().get_nodes_in_group("lesserBodies")[netIndex]
-	var normal = lesserBody.getNormal()
-	position = lesserBody.getCentroid()
-	var great = lesserBody.getGreat()
+	var lesser_body = get_tree().get_nodes_in_group("lesser_bodies")[net_index]
+	var normal = lesser_body.get_normal()
+	position = lesser_body.get_centroid()
+	var great = lesser_body.get_great()
+	
+	var rotated_position = position
 	
 	if great != 0:
 		var up = Vector3(0, 1, 0)
 		
-		rotationAngle = acos(normal.dot(up))
+		rotation_axis = up.cross(normal).normalized()
 		
-		rotationAxis = up.cross(normal).normalized()
+		rotate(rotation_axis, t_angle)
 		
-		rotate(rotationAxis, rotationAngle)
-	move_and_collide(position)
+		var rotate_transform = Transform()
+		rotate_transform = rotate_transform.rotated(rotation_axis, -t_angle)
+		rotated_position = rotate_transform * position
+	
+	translate(rotated_position)
 
-func move(newNetIndex):
-	var lesserBodies = get_tree().get_nodes_in_group("lesserBodies")
-	var oldLesser = lesserBodies[netIndex]
-	var newLesser = lesserBodies[newNetIndex]
+func move(new_net_index):
+	var lesser_bodies = get_tree().get_nodes_in_group("lesser_bodies")
+	var old_lesser = lesser_bodies[net_index]
+	var new_lesser = lesser_bodies[new_net_index]
+	
+	var rotation_array = move_helper.get_rotate(old_lesser, new_lesser)
+	
+	var rotated_position = position
+	
+	if old_lesser.get_great() != 0:
+		var rotate_transform = Transform()
+		rotate_transform = rotate_transform.rotated(rotation_array[1], t_angle)
+		rotated_position = rotate_transform * position
 	
 	# reset to origin
-	move_and_collide(-position)
+	translate(-rotated_position)
 	
-	var rotationArray = moveHelper.getRotate(oldLesser, newLesser)
+	if rotation_array[0]:
+		rotate(rotation_array[1], t_angle)
 	
-	if rotationArray[0]:
-		rotate(rotationArray[1], tAngle)
+	if rotation_array[2]:
+		rotate(rotation_array[3], t_angle)
 	
-	if rotationArray[2]:
-		rotate(rotationArray[3], tAngle)
+	position = new_lesser.get_centroid()
+	rotated_position = position
 	
-	position = newLesser.getCentroid()
-	move_and_collide(position)
+	if new_lesser.get_great() != 0:
+		var rotate_transform = Transform()
+		rotate_transform = rotate_transform.rotated(rotation_array[3], -t_angle)
+		rotated_position = rotate_transform * position
+	translate(rotated_position)
 	
-	netIndex = newNetIndex
+	net_index = new_net_index
 
 func get_army_index():
-	return armyIndex
+	return army_index
 
 func get_net_index():
-	return netIndex
+	return net_index
 
-# custom functions
 func get_type():
 	return type

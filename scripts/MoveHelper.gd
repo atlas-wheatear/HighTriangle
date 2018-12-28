@@ -4,11 +4,11 @@ extends Node
 var leftmosts = []
 var rightmosts = []
 
-var edgeMoves = []
-var vertexMoves = []
+var edge_moves = []
+var vertex_moves = []
 
-var rookRows = []
-var rookColumns = []
+var rook_rows = []
+var rook_columns = []
 
 var ratio
 var nl
@@ -18,17 +18,17 @@ var board
 var pieces = []
 
 # right-most value of a given net-row
-func populateRightmosts():
+func populate_rightmosts():
 	for i in range(2*ratio):
 		rightmosts.append((4*ratio-2)*(i+1)-int(pow(i,2)))
     
-func scanForRookMoves(armyIndex, line, moves):
+func scan_for_rook_moves(army_index, line, moves):
 	# iterate through line
-	for iNetIndex in line:
-		# if hostile piece in iNetIndex
-		if hostilePieceInNetIndex(armyIndex, iNetIndex):
+	for i_net_index in line:
+		# if hostile piece in i_net_index
+		if hostile_piece_in_net_index(army_index, i_net_index):
 			# calculate move
-			var move = [iNetIndex, true]
+			var move = [i_net_index, true]
 			 
 			# if move is not already in moves
 			if not moves.has(move):
@@ -37,12 +37,12 @@ func scanForRookMoves(armyIndex, line, moves):
                        
 			# end of chain, break
 			break
-		elif friendlyPieceInNetIndex(armyIndex, iNetIndex):
+		elif friendly_piece_in_net_index(army_index, i_net_index):
 			# end of chain, break
 			break
 		else:
 			# calculate move
-			var move = [iNetIndex, false]
+			var move = [i_net_index, false]
                 
 			# if move is not already in moves
 			if not moves.has(move):
@@ -53,61 +53,61 @@ func scanForRookMoves(armyIndex, line, moves):
 	return moves
 
 # left-most value of a given net-row
-func populateLeftmosts():
+func populate_leftmosts():
 	for i in range(2*ratio):
 		leftmosts.append((4*ratio-i)*i)
 
-func hostilePieceInNetIndex(armyIndex, netIndex):
+func hostile_piece_in_net_index(army_index, net_index):
 	# iterate through pieces
 	
-	var piece = pieces[netIndex]
+	var piece = pieces[net_index]
 	
 	if piece.empty():
 		return false
 	
-	if armyIndex != piece[0].get_army_index():
+	if army_index != piece[0].get_army_index():
 		return true
 	
 	return false
 
-func friendlyPieceInNetIndex(armyIndex, netIndex):
-	var piece = pieces[netIndex]
+func friendly_piece_in_net_index(army_index, net_index):
+	var piece = pieces[net_index]
 	
 	if piece.empty():
 		return false
 	
-	if armyIndex == piece[0].get_army_index():
+	if army_index == piece[0].get_army_index():
 		return true
 	
 	return false
 	
-func emptyNetIndex(netIndex):
-	var pieceArray = pieces[netIndex]
+func empty_net_index(net_index):
+	var piece_array = pieces[net_index]
 	
-	if pieceArray.empty():
+	if piece_array.empty():
 		return true
 	
 	return false
 
-func getNetRow(netIndex):
+func get_net_row(net_index):
 	# iterate through each row (no rows = ratio*2)
 	for i in range(ratio*2):
-		# if netIndex is leq to index of rightmost lesser of row i
-		if netIndex <= rightmosts[i]:
+		# if net_index is leq to index of rightmost lesser of row i
+		if net_index <= rightmosts[i]:
 			# return row number
 			return i
 
 # returns True if triangle is up /\, False if it is down \/
-func isUp(netIndex):
-	# get row of netIndex
-	var netRow = getNetRow(netIndex)
+func is_up(net_index):
+	# get row of net_index
+	var net_row = get_net_row(net_index)
 	
-	# get leftmost of netRow
-	var leftMost = leftmosts[netRow]
+	# get leftmost of net_row
+	var leftmost = leftmosts[net_row]
 	
 	# every leftmost is a down triangle
 	# if an odd number of triangles along from leftmost
-	if int(netIndex-leftMost) % 2 == 1:
+	if int(net_index-leftmost) % 2 == 1:
 		# triangle is up
 		return true
             
@@ -115,347 +115,347 @@ func isUp(netIndex):
 	return false
 
 # move alpha in direction down left / on NET
-func moveAlphaDownLeft(netIndex):
+func move_alpha_down_left(net_index):
 	# if triangle is down
-	if not isUp(netIndex):
-		# return decremented netIndex
-		return netIndex-1
+	if not is_up(net_index):
+		# return decremented net_index
+		return net_index-1
         
 	# hence triangle is up
 	# get net row
-	var netRow = getNetRow(netIndex)
+	var net_row = get_net_row(net_index)
         
 	# get leftmost
-	var leftMost = leftmosts[netRow]
+	var leftmost = leftmosts[net_row]
         
 	# get leftmost of row below
-	var leftMostBelow = leftmosts[netRow+1]
+	var leftmost_below = leftmosts[net_row+1]
         
 	# calculate displacement from leftmost
-	var d = netIndex-leftMost
+	var d = net_index-leftmost
         
-	# return the leftMostBelow summed with (d-1)
-	return leftMostBelow + d-1
+	# return the leftmost_below summed with (d-1)
+	return leftmost_below + d-1
 
 # move alpha up right / on NET
-func moveAlphaUpRight(netIndex):
+func move_alpha_up_right(net_index):
 	# if triangle is up
-	if isUp(netIndex):
-		# return incremented netIndex
-		return netIndex+1
+	if is_up(net_index):
+		# return incremented net_index
+		return net_index+1
        
 	# hence triangle is down
 	# get net row
-	var netRow = getNetRow(netIndex)
+	var net_row = get_net_row(net_index)
        
 	# get left-most
-	var leftMost = leftmosts[netRow]
+	var leftmost = leftmosts[net_row]
        
-	# get leftMost of row above
-	var leftMostAbove = leftmosts[netRow-1]
+	# get leftmost of row above
+	var leftmost_above = leftmosts[net_row-1]
        
-	# calculate displacement from leftMost
-	var d = netIndex-leftMost
+	# calculate displacement from leftmost
+	var d = net_index-leftmost
 
-	# return leftMostBelow added to (d+1)
-	return leftMostAbove + (d+1)
+	# return leftmost_below added to (d+1)
+	return leftmost_above + (d+1)
 
 # move in direction <- on NET
-func moveLeft(netIndex):
-	return netIndex-1
+func moveLeft(net_index):
+	return net_index-1
     
 # move in direction -> on NET
-func moveRight(netIndex):
-	return netIndex+1
+func moveRight(net_index):
+	return net_index+1
 
 # move in direction ^ on NET
-func moveUp(netIndex):
-	# calculate netRow
-	var netRow = getNetRow(netIndex)
+func move_up(net_index):
+	# calculate net_row
+	var net_row = get_net_row(net_index)
         
 	# calculate leftmost
-	var leftMost = leftmosts[netRow]
+	var leftmost = leftmosts[net_row]
         
-	# calculate leftMost of row above
-	var leftMostAbove = leftmosts[netRow-1]
+	# calculate leftmost of row above
+	var leftmost_above = leftmosts[net_row-1]
         
-	# calculate distance from leftMost
-	var d = netIndex - leftMost
+	# calculate distance from leftmost
+	var d = net_index - leftmost
         
-	# return leftMostAbove + (d+1)
-	return leftMostAbove + (d+1)
+	# return leftmost_above + (d+1)
+	return leftmost_above + (d+1)
 
 # move in direction v on net
-func moveDown(netIndex):
-	# calculate netRow
-	var netRow = getNetRow(netIndex)
+func move_down(net_index):
+	# calculate net_row
+	var net_row = get_net_row(net_index)
         
-	# calculate leftMost
-	var leftMost = leftmosts[netRow]
+	# calculate leftmost
+	var leftmost = leftmosts[net_row]
         
-	# calculate leftMost of row below
-	var leftMostBelow = leftmosts[netRow+1]
+	# calculate leftmost of row below
+	var leftmost_below = leftmosts[net_row+1]
         
-	# calculate distance from leftMost
-	var d = netIndex - leftMost
+	# calculate distance from leftmost
+	var d = net_index - leftmost
         
-	# return leftMostBelow + (d-1)
-	return leftMostBelow + (d-1)
+	# return leftmost_below + (d-1)
+	return leftmost_below + (d-1)
 
 # move alpha down right \ on NET
-func moveAlphaDownRight(netIndex):
+func move_alpha_down_right(net_index):
 	# if triangle is down
-	if not isUp(netIndex):
-		# return incremented netIndex
-		return netIndex+1
+	if not is_up(net_index):
+		# return incremented net_index
+		return net_index+1
         
 	# hence triangle is up
 	# get net row
-	var netRow = getNetRow(netIndex)
+	var net_row = get_net_row(net_index)
         
 	# get right-most
-	var rightMost = rightmosts[netRow]
+	var rightmost = rightmosts[net_row]
         
 	# get right-most of row below
-	var rightMostBelow = rightmosts[netRow+1]
+	var rightmost_below = rightmosts[net_row+1]
         
 	# calculate distance from right-most
-	var d = rightMost-netIndex
+	var d = rightmost-net_index
         
-	# return rightMostBelow - (d-1)
-	return rightMostBelow - (d-1)
+	# return rightmost_below - (d-1)
+	return rightmost_below - (d-1)
 
 # move alpha up left \ on NET
-func moveAlphaUpLeft(netIndex):
+func move_alpha_up_left(net_index):
 	# if triangle is up
-	if isUp(netIndex):
-		# return decremented netIndex
-		return netIndex-1
+	if is_up(net_index):
+		# return decremented net_index
+		return net_index-1
         
 	# hence triangle is down
 	# get net row
-	var netRow = getNetRow(netIndex)
+	var net_row = get_net_row(net_index)
         
 	# get right-most
-	var rightMost = rightmosts[netRow]
+	var rightmost = rightmosts[net_row]
         
 	# get right-most of row below
-	var rightMostAbove = rightmosts[netRow-1]
+	var rightmost_above = rightmosts[net_row-1]
         
 	# calculate distance from right-most
-	var d = rightMost-netIndex
+	var d = rightmost-net_index
         
-	# return rightMostBelow - (d+1)
-	return rightMostAbove - (d+1)
+	# return rightmost_below - (d+1)
+	return rightmost_above - (d+1)
 
 # move beta down left / on NET
-func moveBetaDownLeft(netIndex):
+func move_beta_down_left(net_index):
 	# if triangle is down
-	if not isUp(netIndex):
-		# return decremented netIndex
-		return netIndex-1
+	if not is_up(net_index):
+		# return decremented net_index
+		return net_index-1
         
 	# hence triangle is up
-	# calculate netRow
-	var netRow = getNetRow(netIndex)
+	# calculate net_row
+	var net_row = get_net_row(net_index)
         
-	# calculate rightMost of netRow
-	var rightMost = rightmosts[netRow]
+	# calculate rightmost of net_row
+	var rightmost = rightmosts[net_row]
         
-	# calculate rightMost of below netRow
-	var rightMostBelow = rightmosts[netRow+1]
+	# calculate rightmost of below net_row
+	var rightmost_below = rightmosts[net_row+1]
         
-	# calculate distance from rightMost
-	var d = rightMost-netIndex
+	# calculate distance from rightmost
+	var d = rightmost-net_index
         
-	# return rightMostBelow with (d+1) subtracted
-	return rightMostBelow - (d+1)
+	# return rightmost_below with (d+1) subtracted
+	return rightmost_below - (d+1)
 
 # move beta up right / on NET
-func moveBetaUpRight(netIndex):
+func move_beta_up_right(net_index):
 	# if triangle is up
-	if isUp(netIndex):
-		# return incremented netIndex
-		return netIndex+1
+	if is_up(net_index):
+		# return incremented net_index
+		return net_index+1
         
 	# hence triangle is down
-	# calculate netRow
-	var netRow = getNetRow(netIndex)
+	# calculate net_row
+	var net_row = get_net_row(net_index)
         
-	# calculate rightMost of netRow
-	var rightMost = rightmosts[netRow]
+	# calculate rightmost of net_row
+	var rightmost = rightmosts[net_row]
         
-	# calculate rightmost of above netRow
-	var rightMostAbove = rightmosts[netRow-1]
+	# calculate rightmost of above net_row
+	var rightmost_above = rightmosts[net_row-1]
         
-	# calculate distance from rightMost
-	var d = rightMost-netIndex
+	# calculate distance from rightmost
+	var d = rightmost-net_index
         
-	# return rightMostAbove with (d-1) subtracted
-	return rightMostAbove - (d-1)
+	# return rightmost_above with (d-1) subtracted
+	return rightmost_above - (d-1)
 
 # move beta down right \ on NET
-func moveBetaDownRight(netIndex):
+func move_beta_down_right(net_index):
 	# if triangle is down
-	if not isUp(netIndex):
-		# return incremented netIndex
-		return netIndex+1
+	if not is_up(net_index):
+		# return incremented net_index
+		return net_index+1
         
 	# hence triangle is up
-	# calculate netRow
-	var netRow = getNetRow(netIndex)
+	# calculate net_row
+	var net_row = get_net_row(net_index)
         
-	# calculate leftMost of netRow
-	var leftMost = leftmosts[netRow]
+	# calculate leftmost of net_row
+	var leftmost = leftmosts[net_row]
         
-	# calculate leftMost of below netRow
-	var leftMostBelow = leftmosts[netRow+1]
+	# calculate leftmost of below net_row
+	var leftmost_below = leftmosts[net_row+1]
         
-	# calculate distance from leftMost
-	var d = netIndex-leftMost
+	# calculate distance from leftmost
+	var d = net_index-leftmost
         
-	# return leftMostBelow with (d+1) added
-	return leftMostBelow + d+1
+	# return leftmost_below with (d+1) added
+	return leftmost_below + d+1
 
 # move beta up left \ on NET
-func moveBetaUpLeft(netIndex):
+func move_beta_up_left(net_index):
 	# if triangle is up
-	if isUp(netIndex):
-		# return decremented netIndex
-		return netIndex-1
+	if is_up(net_index):
+		# return decremented net_index
+		return net_index-1
         
 	# hence triangle is down
-	# calculate netRow
-	var netRow = getNetRow(netIndex)
+	# calculate net_row
+	var net_row = get_net_row(net_index)
         
-	# calculate leftMost of netRow
-	var leftMost = leftmosts[netRow]
+	# calculate leftmost of net_row
+	var leftmost = leftmosts[net_row]
         
-	# calculate leftMost of above netRow
-	var leftMostAbove = leftmosts[netRow-1]
+	# calculate leftmost of above net_row
+	var leftmost_above = leftmosts[net_row-1]
         
-	# calculate distance from leftMost
-	var d = netIndex-leftMost
+	# calculate distance from leftmost
+	var d = net_index-leftmost
         
-	# return leftMostAbove with (d-1) added
-	return leftMostAbove + d-1
+	# return leftmost_above with (d-1) added
+	return leftmost_above + d-1
 
-func moveOnNet(netIndex, motion):
+func move_on_net(net_index, motion):
 	match motion:
 		"left":
-			netIndex = moveLeft(netIndex)
+			net_index = moveLeft(net_index)
 		"right":
-			netIndex = moveRight(netIndex)
+			net_index = moveRight(net_index)
 		"up":
-			netIndex = moveUp(netIndex)
+			net_index = move_up(net_index)
 		"down":
-			netIndex = moveDown(netIndex)
+			net_index = move_down(net_index)
 		"alphaDownLeft": 
-			netIndex = moveAlphaDownLeft(netIndex) 
+			net_index = move_alpha_down_left(net_index) 
 		"alphaDownRight":
-			netIndex = moveAlphaDownRight(netIndex)
+			net_index = move_alpha_down_right(net_index)
 		"alphaUpLeft":
-			netIndex = moveAlphaUpLeft(netIndex)
+			net_index = move_alpha_up_left(net_index)
 		"alphaUpRight":
-			netIndex = moveAlphaUpRight(netIndex)
+			net_index = move_alpha_up_right(net_index)
 		"betaUpLeft":
-			netIndex = moveBetaUpLeft(netIndex)
+			net_index = move_beta_up_left(net_index)
 		"betaUpRight":
-			netIndex = moveBetaUpRight(netIndex)
+			net_index = move_beta_up_right(net_index)
 		"betaDownLeft":
-			netIndex = moveBetaDownLeft(netIndex)
+			net_index = move_beta_down_left(net_index)
 		"betaDownRight":
-			netIndex = moveBetaDownRight(netIndex)
+			net_index = move_beta_down_right(net_index)
 	
-	return netIndex
+	return net_index
 
-func populateEdgeMoves():
-	edgeMoves = []
+func populate_edge_moves():
+	edge_moves = []
 	
 	for i in range(4*nl):
-		edgeMoves.append([])
+		edge_moves.append([])
 	
 	for i in range(4*nl):
 		# if up triangle
-		if isUp(i):
+		if is_up(i):
 			# trivial motion
-			edgeMoves[i].append(moveAlphaUpLeft(i))
-			edgeMoves[i].append(moveDown(i))
-			edgeMoves[i].append(moveAlphaUpRight(i))
+			edge_moves[i].append(move_alpha_up_left(i))
+			edge_moves[i].append(move_down(i))
+			edge_moves[i].append(move_alpha_up_right(i))
 		else:
 			# non-trivial motion
-			var great = board.getGreat(i)
+			var great = board.get_great(i)
 			
 			# alpha down left motion
-			# if leftmost netIndex
+			# if leftmost net_index
 			if leftmosts.has(i):
-				var row = getNetRow(i)
+				var row = get_net_row(i)
 				var nextRow = 2*ratio - row - 1
-				edgeMoves[i].append(leftmosts[nextRow])
-			# not leftmost netIndex
+				edge_moves[i].append(leftmosts[nextRow])
+			# not leftmost net_index
 			else:
-				edgeMoves[i].append(moveAlphaDownLeft(i))
+				edge_moves[i].append(move_alpha_down_left(i))
 			
 			# alpha down right motion
-			# if rightmost netIndex
+			# if rightmost net_index
 			if rightmosts.has(i):
-				var row = getNetRow(i)
+				var row = get_net_row(i)
 				var nextRow = 2*ratio - row -1
-				edgeMoves[i].append(rightmosts[nextRow])
-			# not rightmost netIndex
+				edge_moves[i].append(rightmosts[nextRow])
+			# not rightmost net_index
 			else:
-				edgeMoves[i].append(moveAlphaDownRight(i))
+				edge_moves[i].append(move_alpha_down_right(i))
 			
 			# up motion
-			# if netIndex in top row
-			if getNetRow(i) == 0:
-				edgeMoves[i].append(4*ratio - 2 - i)
+			# if net_index in top row
+			if get_net_row(i) == 0:
+				edge_moves[i].append(4*ratio - 2 - i)
 			# not in top row
 			else:
-				edgeMoves[i].append(moveUp(i))
+				edge_moves[i].append(move_up(i))
 
-func populateVertexMoves():
-	vertexMoves = []
+func populate_vertex_moves():
+	vertex_moves = []
 	for i in range(4*nl):
-		vertexMoves.append([])
+		vertex_moves.append([])
 	
 	# iterate through lessers
 	for i in range(4*nl):
 		# if up
-		if isUp(i):
+		if is_up(i):
 			# moving up
 			# if not illegal position
 			if i != 2*ratio-1:
 				# if top most
-				if getNetRow(i) == 0:
-					vertexMoves[i].append(4*ratio-2-i)
+				if get_net_row(i) == 0:
+					vertex_moves[i].append(4*ratio-2-i)
 				# not top most
 				else:
-					vertexMoves[i].append(moveUp(i))
+					vertex_moves[i].append(move_up(i))
 			
 			# moving beta down right
 			# if not illegal position
 			if i != rightmosts[ratio-1]-1:
 				# if one less than rightmost
 				if rightmosts.has(i+1):
-					var row = getNetRow(i)
+					var row = get_net_row(i)
 					var nextRow = 2*ratio-row-2
-					vertexMoves[i].append(rightmosts[nextRow]-1)
+					vertex_moves[i].append(rightmosts[nextRow]-1)
 				# not one less than rightmost
 				else:
-					vertexMoves[i].append(moveBetaDownRight(i))
+					vertex_moves[i].append(move_beta_down_right(i))
 			
 			# moving beta down left
 			# if not illegal position
 			if i != leftmosts[ratio-1]+1:
 				# if one more than leftmost
 				if leftmosts.has(i-1):
-					var row = getNetRow(i)
+					var row = get_net_row(i)
 					var nextRow = 2*ratio-row-2
-					vertexMoves[i].append(leftmosts[nextRow]+1)
+					vertex_moves[i].append(leftmosts[nextRow]+1)
 				# not one more than leftmost
 				else:
-					vertexMoves[i].append(moveBetaDownLeft(i))
+					vertex_moves[i].append(move_beta_down_left(i))
 		# is down
 		else:
 			# moving down
@@ -464,65 +464,65 @@ func populateVertexMoves():
 				# if in leftmosts
 				
 				if leftmosts.has(i):
-					var row = getNetRow(i)
+					var row = get_net_row(i)
 					var nextRow = 2*ratio-row-2
-					vertexMoves[i].append(leftmosts[nextRow])
+					vertex_moves[i].append(leftmosts[nextRow])
 				# else if in rightmosts
 				elif rightmosts.has(i):
-					var row = getNetRow(i)
+					var row = get_net_row(i)
 					var nextRow = 2*ratio-row-2
-					vertexMoves[i].append(rightmosts[nextRow])
+					vertex_moves[i].append(rightmosts[nextRow])
 				else:
-					vertexMoves[i].append(moveDown(i))
+					vertex_moves[i].append(move_down(i))
 			
 			# moving beta up right
 			# if not illegal position
 			if i != 4*ratio-2 and i != 2*ratio-2 and i != rightmosts[ratio]:
 				# if in rightmosts
 				if rightmosts.has(i):
-					var row = getNetRow(i)
+					var row = get_net_row(i)
 					var nextRow = 2*ratio-row
-					vertexMoves[i].append(rightmosts[nextRow])
+					vertex_moves[i].append(rightmosts[nextRow])
 				# else if top row
-				elif getNetRow(i) == 0:
-					vertexMoves[i].append(4*ratio-4-i)
+				elif get_net_row(i) == 0:
+					vertex_moves[i].append(4*ratio-4-i)
 				else:
-					vertexMoves[i].append(moveBetaUpRight(i))
+					vertex_moves[i].append(move_beta_up_right(i))
 			
 			# moving beta up left
 			# if not illegal position
 			if i != 0 and i != 2*ratio and i != leftmosts[ratio]:
 				# if i in leftmosts
 				if leftmosts.has(i):
-					var row = getNetRow(i)
+					var row = get_net_row(i)
 					var nextRow = 2*ratio-row
-					vertexMoves[i].append(leftmosts[nextRow])
+					vertex_moves[i].append(leftmosts[nextRow])
 				# else if top row
-				elif getNetRow(i) == 0:
-					vertexMoves[i].append(4*ratio-i)
+				elif get_net_row(i) == 0:
+					vertex_moves[i].append(4*ratio-i)
 				else:
-					vertexMoves[i].append(moveBetaUpLeft(i))
+					vertex_moves[i].append(move_beta_up_left(i))
 
-func getRotate(oldLesser, newLesser):
-	var returnArray = []
+func get_rotate(old_lesser, new_lesser):
+	var return_array = []
 	var up = Vector3(0, 1, 0)
 	
 	for i in range(4):
-		returnArray.append([])
+		return_array.append([])
 	
-	if oldLesser.getGreat() == 0:
-		returnArray[0] = false
+	if old_lesser.get_great() == 0:
+		return_array[0] = false
 	else:
-		returnArray[0] = true
-		returnArray[1] = -up.cross(oldLesser.getNormal()).normalized()
+		return_array[0] = true
+		return_array[1] = -up.cross(old_lesser.get_normal()).normalized()
 	
-	if newLesser.getGreat() == 0:
-		returnArray[2] = false
+	if new_lesser.get_great() == 0:
+		return_array[2] = false
 	else:
-		returnArray[2] = true
-		returnArray[3] = up.cross(newLesser.getNormal()).normalized()
+		return_array[2] = true
+		return_array[3] = up.cross(new_lesser.get_normal()).normalized()
 	
-	return returnArray
+	return return_array
 
 func slice(a, start, stop):
 	var rA = []
@@ -530,12 +530,12 @@ func slice(a, start, stop):
 		rA.append(a[i])
 	return rA
 
-# count is the column count reached, baseNetIndex is the base of the first considered column, primaryFragment 
-# is True if the first ratio columns are considered and False if the final ratio-1 columns are considered, baseMotion 
-# is the function by which the baseNetIndex is twice moved, netIndexMotion is the translation function for moving up a column
-func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, baseMotion, netIndexMotion):
+# count is the column count reached,base_net_index is the base of the first considered column, primary_fragment 
+# is True if the first ratio columns are considered and False if the final ratio-1 columns are considered, base_motion 
+# is the function by which thebase_net_index is twice moved, net_index_motion is the translation function for moving up a column
+func add_straight_rook_columns(rook_columns, count,base_net_index, primary_fragment, base_motion, net_index_motion):
 	# if the fragment is primary
-	if primaryFragment:
+	if primary_fragment:
 		# iterate for each column in fragment
 		for i in range(ratio):
 			# calculate column index
@@ -544,27 +544,27 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 			# number of rows
 			var rows = 2*(i+1)
                 
-			# copy baseNetIndex into netIndex
-			var netIndex = baseNetIndex
+			# copybase_net_index into net_index
+			var net_index = base_net_index
                 
-			# append netIndex
-			rookColumns[column].append(int(netIndex))
+			# append net_index
+			rook_columns[column].append(int(net_index))
                 
 			# iterate up remainder of column
 			for j in range(rows-1):
-				# calculate next netIndex
-				netIndex = moveOnNet(netIndex, netIndexMotion)
+				# calculate next net_index
+				net_index = move_on_net(net_index, net_index_motion)
                     
-				# append netIndex
-				rookColumns[column].append(int(netIndex))
+				# append net_index
+				rook_columns[column].append(int(net_index))
                 
 			# break if final iteration
 			if i == ratio-1:
 				break
                 
-			# move baseNetIndex
+			# movebase_net_index
 			for j in range(2):
-				baseNetIndex = moveOnNet(baseNetIndex, baseMotion)
+				base_net_index = move_on_net(base_net_index, base_motion)
             
 		# account for iterations in count
 		count += ratio
@@ -573,9 +573,9 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 	else:
 		# iterate for each column in fragment
 		for i in range(ratio):
-			# move baseNetIndex
+			# movebase_net_index
 			for j in range(2):
-				baseNetIndex = moveOnNet(baseNetIndex, baseMotion)
+				base_net_index = move_on_net(base_net_index, base_motion)
                     
 			# break if final iteration
 			if i == ratio-1:
@@ -587,166 +587,166 @@ func addStraightRookColumns(rookColumns, count, baseNetIndex, primaryFragment, b
 			# num rows
 			var rows = 2*(self.ratio-1-i)
                 
-			# set first netIndex
-			var netIndex = baseNetIndex
+			# set first net_index
+			var net_index = base_net_index
                 
-			# append first netIndex
-			rookColumns[column].append(int(netIndex))
+			# append first net_index
+			rook_columns[column].append(int(net_index))
                 
 			# iterate up remainder of column
 			for j in range(rows-1):
-				# calculate next netIndex
-				netIndex = moveOnNet(netIndex, netIndexMotion)
+				# calculate next net_index
+				net_index = move_on_net(net_index, net_index_motion)
                     
-				# append next netIndex
-				rookColumns[column].append(int(netIndex))
+				# append next net_index
+				rook_columns[column].append(int(net_index))
             
 		# account for iterations in count
 		count += self.ratio-1
 	
-	var returnValue = []
-	returnValue.append(rookColumns)
-	returnValue.append(count)
-	returnValue.append(baseNetIndex)   
+	var return_value = []
+	return_value.append(rook_columns)
+	return_value.append(count)
+	return_value.append(base_net_index)   
         
 	# return relevant values
-	return returnValue
+	return return_value
 
 # populate the rook notation list
-func populateRookNotation():
-	rookRows = []
-	rookColumns = []
-	# initialise empty rookRows list
+func populate_rook_notation():
+	rook_rows = []
+	rook_columns = []
+	# initialise empty rook_rows list
 	for i in range(ratio):
-		rookRows.append([])
+		rook_rows.append([])
 	
 	# iterate through rows
 	for i in range(ratio):
 		var nc = 2*i+1
-		# first netIndex in great B/1
-		var netIndex = 2*i
+		# first net_index in great B/1
+		var net_index = 2*i
             
-		# append first netIndex
-		rookRows[i].append(netIndex)
+		# append first net_index
+		rook_rows[i].append(net_index)
             
 		# iterate along columns in great B/1
 		for j in range(nc-1):
-			# calculate next netIndex
-			netIndex = moveAlphaDownLeft(netIndex)
+			# calculate next net_index
+			net_index = move_alpha_down_left(net_index)
 			
-			# append next netIndex
-			rookRows[i].append(netIndex)
+			# append next net_index
+			rook_rows[i].append(net_index)
             
-		# first netIndex in great C/2
-		netIndex = leftmosts[2*self.ratio-1-i]
+		# first net_index in great C/2
+		net_index = leftmosts[2*self.ratio-1-i]
            
-		# append first netIndex
-		rookRows[i].append(netIndex)
+		# append first net_index
+		rook_rows[i].append(net_index)
 		    
 		# iterate along columns in great C/2
 		for j in range(nc-1):
-			# calculate next netIndex
-			netIndex = moveRight(netIndex)
+			# calculate next net_index
+			net_index = moveRight(net_index)
 			     
-			# append next netIndex
-			rookRows[i].append(netIndex)
+			# append next net_index
+			rook_rows[i].append(net_index)
 		
-		# first netIndex in great D/3
-		netIndex = rightmosts[i]
+		# first net_index in great D/3
+		net_index = rightmosts[i]
 		
-		# append first netIndex
-		rookRows[i].append(netIndex)
+		# append first net_index
+		rook_rows[i].append(net_index)
 		
 		# iterate along columns in great D/3
 		for j in range(nc-1):
-			# calculate next netIndex
-			netIndex = moveAlphaUpLeft(netIndex)
+			# calculate next net_index
+			net_index = move_alpha_up_left(net_index)
 			
-			# append next netIndex
-			rookRows[i].append(netIndex)
+			# append next net_index
+			rook_rows[i].append(net_index)
 	
-	# no of rookColumns corresponding to one non-central great
+	# no of rook_columns corresponding to one non-central great
 	var nrc = 2*ratio-1
         
 	# intialize empty columns
 	for i in range(3*nrc):
-		rookColumns.append([])
+		rook_columns.append([])
         
 	# columns running count
 	var count = 0
 	
 	# iterate columns of face B/1        
-	# base netIndex
-	var baseNetIndex = nrc-1
+	# base net_index
+	var base_net_index = nrc-1
         
 	# primary fragment
-	var returnArray = addStraightRookColumns(rookColumns, count, baseNetIndex, true, "left", "betaDownRight")
+	var return_array = add_straight_rook_columns(rook_columns, count,base_net_index, true, "left", "betaDownRight")
         
 	# secondary fragment
-	returnArray = addStraightRookColumns(returnArray[0], returnArray[1], returnArray[2], false, "alphaDownRight", "betaDownRight")	
+	return_array = add_straight_rook_columns(return_array[0], return_array[1], return_array[2], false, "alphaDownRight", "betaDownRight")	
 	    
 	# face C/2
 	# primary fragment
-	returnArray = addStraightRookColumns(returnArray[0], returnArray[1], returnArray[2], true, "alphaDownRight", "up") 
+	return_array = add_straight_rook_columns(return_array[0], return_array[1], return_array[2], true, "alphaDownRight", "up") 
 	
 	# secondary fragment
-	returnArray = addStraightRookColumns(returnArray[0], returnArray[1], returnArray[2], false, "alphaUpRight", "up")
+	return_array = add_straight_rook_columns(return_array[0], return_array[1], return_array[2], false, "alphaUpRight", "up")
 	
 	# face D/3
 	# primary fragment
-	returnArray = addStraightRookColumns(returnArray[0], returnArray[1], returnArray[2], true, "alphaUpRight", "betaDownLeft")
+	return_array = add_straight_rook_columns(return_array[0], return_array[1], return_array[2], true, "alphaUpRight", "betaDownLeft")
         
 	# secondary fragment
-	returnArray = addStraightRookColumns(returnArray[0], returnArray[1], returnArray[2], false, "left", "betaDownLeft")
+	return_array = add_straight_rook_columns(return_array[0], return_array[1], return_array[2], false, "left", "betaDownLeft")
 		
-	rookColumns = returnArray[0]
+	rook_columns = return_array[0]
 
 
-func getOccupiedRookLines(netIndex):
-	# set empty occupiedRookLines
-	var occupiedRookLines = []
+func get_occupied_rook_lines(net_index):
+	# set empty occupied_rook_lines
+	var occupied_rook_lines = []
 	 
 	# iterate through rows
-	for row in rookRows:
-		# if netIndex present
-		if netIndex in row:
+	for row in rook_rows:
+		# if net_index present
+		if net_index in row:
 			# append row with 'row' flag
-			occupiedRookLines.append([row, true])
+			occupied_rook_lines.append([row, true])
         
 	# iterate through columns
-	for column in rookColumns:
-		# if netIndex present
-		if netIndex in column:
+	for column in rook_columns:
+		# if net_index present
+		if net_index in column:
 			# append column with no 'row' flag
-			occupiedRookLines.append([column, false])
+			occupied_rook_lines.append([column, false])
 	
-	# return occupiedRookLines
-	return occupiedRookLines
+	# return occupied_rook_lines
+	return occupied_rook_lines
 
-# list of moves, each move has it's netIndex and a bool that is True if it represents a capture, and False if it does not
-func getRookMoves(armyIndex, netIndex):
+# list of moves, each move has it's net_index and a bool that is True if it represents a capture, and False if it does not
+func get_rook_moves(army_index, net_index):
 	# is returning current position as valid move, WRONG!
 	# get list of rows+columns in which rook is
-	var occupiedRookLines = getOccupiedRookLines(netIndex)
+	var occupied_rook_lines = get_occupied_rook_lines(net_index)
 	
 	# initalize empty moves list
 	var moves = []
 	
 	# iterate through rows+columns
-	for pair in occupiedRookLines:
+	for pair in occupied_rook_lines:
 		# get content
 		var line = pair[0]
 		
-		# get index of netIndex
-		var index = line.find(netIndex)
+		# get index of net_index
+		var index = line.find(net_index)
 		
-		# if pre-netIndex indexes
+		# if pre-net_index indexes
 		if index != 0:
 			# slice copied line before index and reverse
 			var formattedLine = slice(line, 0, index)
 			formattedLine.invert()
 			
-			# if post-netIndex indexes exist and is row, consider circumnavigation
+			# if post-net_index indexes exist and is row, consider circumnavigation
 			if index != len(line)-1 and pair[1]:
 				# slice copied line after index and reverse
 				var addLine = slice(line, index+1, len(line))
@@ -756,14 +756,14 @@ func getRookMoves(armyIndex, netIndex):
 				formattedLine += addLine
 			
 			# scan for moves
-			moves = scanForRookMoves(armyIndex, formattedLine, moves)
+			moves = scan_for_rook_moves(army_index, formattedLine, moves)
 			
-		# if post-netIndex indexes
+		# if post-net_index indexes
 		if index != len(line)-1:
 			# slice copied line after index
 			var formattedLine = slice(line, index+1, len(line))
 
-			# if pre-netIndex indexes exist and is row, consider circumnavigation
+			# if pre-net_index indexes exist and is row, consider circumnavigation
 			if index != 0 and pair[1]:
 				# slice copied line before index
 				var addLine = slice(line, 0, index)
@@ -772,123 +772,123 @@ func getRookMoves(armyIndex, netIndex):
 				formattedLine += addLine
 			
 			# scan for moves
-			moves = scanForRookMoves(armyIndex, formattedLine, moves)
+			moves = scan_for_rook_moves(army_index, formattedLine, moves)
 	
 	# return moves
 	return moves
 
-func getPawnMoves(armyIndex, netIndex):
+func get_pawn_moves(army_index, net_index):
 	var moves = []
 	
-	for move in edgeMoves[netIndex]:
-		if emptyNetIndex(move):
+	for move in edge_moves[net_index]:
+		if empty_net_index(move):
 			moves.append([move, false])
 	
-	for move in vertexMoves[netIndex]:
-		if hostilePieceInNetIndex(armyIndex, move):
+	for move in vertex_moves[net_index]:
+		if hostile_piece_in_net_index(army_index, move):
 			moves.append([move, true])
 	
 	return moves
 
-func getFersMoves(armyIndex, netIndex):
+func get_fers_moves(army_index, net_index):
 	var moves = []
 	
-	for move in vertexMoves[netIndex]:
-		if emptyNetIndex(move):
+	for move in vertex_moves[net_index]:
+		if empty_net_index(move):
 			moves.append([move, false])
 	
-	for move in edgeMoves[netIndex]:
-		if hostilePieceInNetIndex(armyIndex, move):
+	for move in edge_moves[net_index]:
+		if hostile_piece_in_net_index(army_index, move):
 			moves.append([move, true])
 	
 	return moves
 
-func getKnightMoves(armyIndex, netIndex):
+func get_knight_moves(army_index, net_index):
 	var moves = []
 	
-	var firstSteps = vertexMoves[netIndex]
+	var first_steps = vertex_moves[net_index]
 	
-	for firstStep in firstSteps:
-		var secondSteps = edgeMoves[firstStep]
+	for first_step in first_steps:
+		var second_steps = edge_moves[first_step]
 		
-		for secondStep in secondSteps:
-			if emptyNetIndex(secondStep):
-				moves.append([secondStep, false])
-			elif hostilePieceInNetIndex(armyIndex, secondStep):
-				moves.append([secondStep, true])
+		for second_step in second_steps:
+			if empty_net_index(second_step):
+				moves.append([second_step, false])
+			elif hostile_piece_in_net_index(army_index, second_step):
+				moves.append([second_step, true])
 	
 	return moves
 
-func getCrownMoves(armyIndex, netIndex):
+func get_crown_moves(army_index, net_index):
 	var moves = []
 	
-	for move in edgeMoves[netIndex]:
-		if emptyNetIndex(move):
+	for move in edge_moves[net_index]:
+		if empty_net_index(move):
 			moves.append([move, false])
-		elif hostilePieceInNetIndex(armyIndex, move):
+		elif hostile_piece_in_net_index(army_index, move):
 			moves.append([move, true])
 	
-	for move in vertexMoves[netIndex]:
-		if emptyNetIndex(move):
+	for move in vertex_moves[net_index]:
+		if empty_net_index(move):
 			moves.append([move, false])
-		elif hostilePieceInNetIndex(armyIndex, move):
+		elif hostile_piece_in_net_index(army_index, move):
 			moves.append([move, true])
 	
 	return moves
 
-func getMoves(netIndex):
-	var piece = pieces[netIndex][0]
+func get_moves(net_index):
+	var piece = pieces[net_index][0]
 	var moves
 	var type = piece.get_type()
-	var armyIndex = piece.get_army_index()
+	var army_index = piece.get_army_index()
 	match type:
 		"rook":
-			moves = getRookMoves(armyIndex, netIndex)
+			moves = get_rook_moves(army_index, net_index)
 		"fers":
-			moves = getFersMoves(armyIndex, netIndex)
+			moves = get_fers_moves(army_index, net_index)
 		"crown":
-			moves = getCrownMoves(armyIndex, netIndex)
+			moves = get_crown_moves(army_index, net_index)
 		"knight":
-			moves = getKnightMoves(armyIndex, netIndex)
+			moves = get_knight_moves(army_index, net_index)
 		"pawn":
-			moves = getPawnMoves(armyIndex, netIndex)
+			moves = get_pawn_moves(army_index, net_index)
 	
 	return moves
 
-func legal_move(firstNetIndex, secondNetIndex):
-	var moves = getMoves(firstNetIndex)
+func legal_move(first_net_index, second_net_index):
+	var moves = get_moves(first_net_index)
 	
 	for move in moves:
-		if secondNetIndex == move[0]:
+		if second_net_index == move[0]:
 			return true
 			
 	return false
 
-func move(firstNetIndex, secondNetIndex):
-	var piece = pieces[firstNetIndex][0]
-	var armyIndex = piece.get_army_index()
+func move(first_net_index, second_net_index):
+	var piece = pieces[first_net_index][0]
+	var army_index = piece.get_army_index()
 	
-	if hostilePieceInNetIndex(armyIndex, secondNetIndex):
-		pieces[secondNetIndex][0].queue_free()
+	if hostile_piece_in_net_index(army_index, second_net_index):
+		pieces[second_net_index][0].queue_free()
 	
-	piece.move(secondNetIndex)
+	piece.move(second_net_index)
 	
-	pieces[secondNetIndex] = [piece]
-	pieces[firstNetIndex] = []
+	pieces[second_net_index] = [piece]
+	pieces[first_net_index] = []
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
 	pass
 
-func setup(argRatio, argPieces, argBoard):
-	board = argBoard
-	ratio = argRatio
-	pieces = argPieces
+func setup(arg_ratio, arg_pieces, arg_board):
+	board = arg_board
+	ratio = arg_ratio
+	pieces = arg_pieces
 	nl = int(pow(ratio, 2))
 	
-	populateLeftmosts()
-	populateRightmosts()
-	populateRookNotation()
-	populateEdgeMoves()
-	populateVertexMoves()
+	populate_leftmosts()
+	populate_rightmosts()
+	populate_rook_notation()
+	populate_edge_moves()
+	populate_vertex_moves()
