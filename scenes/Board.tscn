@@ -4,9 +4,10 @@
 [ext_resource path="res://scripts/Board.gd" type="Script" id=2]
 [ext_resource path="res://scripts/OrbitCamera.gd" type="Script" id=3]
 
-[node name="Game" type="Spatial"]
+[node name="Game" type="Spatial" index="0"]
 
 script = ExtResource( 1 )
+_sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Board" type="MeshInstance" parent="." index="0"]
 

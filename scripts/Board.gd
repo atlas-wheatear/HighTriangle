@@ -37,10 +37,7 @@ var ADBb = ADB-bp
 
 var normals = []
 
-# remember definition of XYZ!!!
-
 func populate_vertices():
-	
 	var t = 2.0*PI/3.0
 	
 	var rotB = Transform()
@@ -327,6 +324,14 @@ func color_moves(net_index, moves):
 		else:
 			lesser_bodies[move[0]].set_color(normal_move_color)
 
+func populate_lights():
+	var light_scene = load("res://scenes/Light.tscn")
+	for i in range(4):
+		var light_instance = light_scene.instance()
+		light_instance.set_name("Light" + str(i))
+		light_instance.setup(normals[i] * 2)
+		add_child(light_instance)
+
 func create_board():
 	normals.append(Vector3(0,1,0))
 	var nB = ABCb.cross(ADBb)
@@ -343,5 +348,6 @@ func create_board():
 	populate_net_to_lesser()
 	populate_lesser_to_net()
 	populate_lessers()
+	populate_lights()
 	draw_board()
 	lesser_bodies = get_tree().get_nodes_in_group("lesser_bodies")
