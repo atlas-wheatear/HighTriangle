@@ -5,7 +5,7 @@ var army_index
 var net_index
 var type
 
-var army_colors = [Color(0.6, 0.6, 0.6, 1.0), Color(0.2, 0.2, 0.2, 1.0), Color(0.4, 0.0, 0.0, 1.0)]
+var army_colors = [Color(0.7, 0.7, 0.7, 1.0), Color(0.3, 0.3, 0.3, 1.0), Color(0.4, 0.0, 0.0, 1.0)]
 
 var position
 var rotation_axis
