@@ -4,6 +4,7 @@ var camera_body
 var camera
 var board
 var move_helper
+var win_helper
 
 # scenes
 var rook_scene
@@ -22,12 +23,20 @@ var current_net_index = -1
 var piece_selected = false
 var selected_net_index = -1
 var capture_selected = false
+var turn = 0
+var no_players
+
+func next_turn():
+	turn += 1
+	turn %= no_players
 
 func _ready():
 	var pieces = []
 	camera_body = $OrbitCamera
 	camera = $OrbitCamera/Camera
 	board = $Board
+	
+	no_players = 3
 	
 	var ratio = 6
 	var s = 2.0
@@ -39,6 +48,7 @@ func _ready():
 		pieces.append([])
 	
 	move_helper = load("res://scripts/MoveHelper.gd").new()
+	win_helper = load("res://scripts/CravenWinHelper.gd").new()
 	
 	crown_scene = load("res://scenes/Crown.tscn")
 	fers_scene = load("res://scenes/Fers.tscn")
@@ -82,6 +92,7 @@ func _ready():
 	pieces[90] = [pawn_body] 
 	
 	move_helper.setup(ratio, pieces, board)
+	win_helper.setup(3, move_helper)
 	
 	set_process_input(true)
 
@@ -96,9 +107,10 @@ func _input(event):
 			if not piece_selected:
 				current_net_index = collided.get_net_index()
 				if not move_helper.empty_net_index(current_net_index):
-					var moves = move_helper.get_moves(current_net_index)
-					board.color_moves(current_net_index, moves)
-					piece_selected = true
+					if move_helper.friendly_piece_in_net_index(turn, current_net_index):
+						var moves = move_helper.get_moves(current_net_index)
+						board.color_moves(current_net_index, moves)
+						piece_selected = true
 			else:
 				selected_net_index = collided.get_net_index()
 				if selected_net_index != current_net_index:
@@ -107,6 +119,9 @@ func _input(event):
 						piece_selected = false
 						capture_selected = false
 						board.reset_colors()
+						if win_helper.game_over():
+							print(win_helper.get_winner())
+						next_turn()
 				else:
 					piece_selected = false
 					capture_selected = false

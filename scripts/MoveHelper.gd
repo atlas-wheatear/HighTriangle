@@ -876,6 +876,9 @@ func move(first_net_index, second_net_index):
 	pieces[second_net_index] = [piece]
 	pieces[first_net_index] = []
 
+func get_pieces():
+	return pieces
+
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here

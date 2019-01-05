@@ -6,6 +6,7 @@ const r2 = sqrt(2)
 var line_color = Color(0.1, 0.1, 0.1)
 var capture_color = Color(1.0, 1.0, 0.0, 1.0)
 var normal_move_color = Color(0.0, 1.0, 0.0, 1.0)
+var current_net_index_color = Color(1.0, 0.5, 0.0, 1.0)
 
 var vertices = []
 var edges = []
@@ -315,9 +316,9 @@ func reset_colors():
 	for lesser_body in lesser_bodies:
 		lesser_body.reset_color()
 
-func color_moves(net_index, moves):
-	reset_colors()
-		
+func color_moves(current_net_index, moves):
+	lesser_bodies[current_net_index].set_color(current_net_index_color)
+	
 	for move in moves:
 		if move[1]:
 			lesser_bodies[move[0]].set_color(capture_color)

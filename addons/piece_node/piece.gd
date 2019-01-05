@@ -5,7 +5,7 @@ var army_index
 var net_index
 var type
 
-var army_colors = [Color(0.7, 0.7, 0.7, 1.0), Color(0.3, 0.3, 0.3, 1.0), Color(0.4, 0.0, 0.0, 1.0)]
+var army_colors = [Color(0.7, 0.7, 0.7, 1.0), Color(0.2, 0.2, 0.2, 1.0), Color(0.4, 0.0, 0.0, 1.0)]
 
 var position
 var rotation_axis
@@ -19,11 +19,18 @@ func _ready():
 	add_to_group("pieces")
 	rotation_axis = Vector3(0, 1, 0)
 
-func place(arg_move_helper, arg_army_index, arg_net_index, arg_type):
+func place(arg_move_helper, arg_army_index, arg_net_index, arg_type):	
 	move_helper = arg_move_helper
 	army_index = arg_army_index
 	net_index = arg_net_index
 	type = arg_type
+	
+	# if crown, add to relevant crown group
+	if type == "crown":
+		add_to_group("crown" + str(army_index))
+	
+	# add to relevant army group
+	add_to_group("army" + str(army_index))
 	
 	body_material = SpatialMaterial.new()
 	body_material.albedo_color = army_colors[army_index]
