@@ -4,7 +4,7 @@ From Latin for 'high triangle', which a machine translator informs me is _altitu
 
 ## Gameplay
 
-![A screenshot](screenshot.png)
+![A screenshot](screenshots/screenshot.png)
 
 There are 2 or 3 armies, consisting of 5 different pieces, 3 of which are familiar from regular, _canonical_ chess: the _pawn_, _knight_ and _rook_ along with the fairy pieces _fers_ and _crown_. The current supported game-mode is _craven_: there is no check or checkmate, the game is over as soon as any crown piece is under attack.
 
