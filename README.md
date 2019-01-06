@@ -1,6 +1,6 @@
-# Altitutri
+# High Triangle
 
-From Latin for 'high triangle', which a machine translator informs me is _altitudinem trianguli_, pronounced \*_al-tea-TOO-tree\*_. A chess derivative played upon the surface of a tetrahedron (triangular pyramid). Implemented in the [Godot Engine](https://godotengine.org/).
+A chess derivative board-game played upon the surface of a tetrahedron (triangular pyramid). Implemented in the [Godot Engine](https://godotengine.org/).
 
 ## Gameplay
 
@@ -19,9 +19,3 @@ Should be as simple as importing the **project.godot** file in Godot and pressin
 ## Acknowledgements
 
 * The CS lecturers at Anglia Ruskin University
-
-## Donations
-
-If you want to humour my inexperienced game-dev with money, here is the pay-pal donation link:
-
-[![](https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G4B6WXRC8HA7W)

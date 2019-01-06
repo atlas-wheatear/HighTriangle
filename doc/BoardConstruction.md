@@ -10,7 +10,7 @@ One can begin by defining the absolute position of the vertex with index **0** a
 
 The procedure is to start with the leftmost vertex of each row's position; place a vertex; move rightwards, placing a vertex every distance equal to _half_ of **l** until the boundary of the great triangle is reached; move the absolute position in a direction at an angle **30** degrees to the right of the vertical a distance **l** and, if the top of the great triangle has not been reached; _repeat_ the previous steps.
 
-This results in a number of vertices per great given by **nv=(R*(R+3)/2)+1**, equal to **28** for the canonical board of ratio **R=6**.
+This results in a number of vertices per great given by **nv=(R\*(R+3)/2)+1**, equal to **28** for the canonical board of ratio **R=6**.
 
 To place the vertices of the other **3** greats, one requires a rotation matrix composed of **2** rotations for each great. The below picture shows the arrangement of the **4** greats labeled **A**, **B**, **C**, and **D**.
 
